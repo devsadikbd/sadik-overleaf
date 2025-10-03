@@ -33,7 +33,7 @@ export function HeroSection() {
       
         
       </div>
-      <div className="max-w-5xl mx-auto mb-[-350px] mt-[50px] relative inset-0 pointer-events-none hidden md:block">
+      <div className="max-w-5xl mx-auto mb-[-330px] mt-[50px] relative inset-0 pointer-events-none hidden md:block">
           
             <img
               src="/hero-section.png"
