@@ -1,32 +1,22 @@
 import Link from "next/link"
 import { Twitter, Linkedin, Facebook, Github } from "lucide-react"
+import { OverleafWordmark } from "@/components/overleaf-logo"
 
 export function Footer() {
   return (
-    <footer className="bg-gray-900 text-white py-12">
-      <div className="container">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-8">
+    <footer className="bg-gray-900 text-white py-8 sm:py-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 sm:gap-8 mb-6 sm:mb-8">
           <div>
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-purple-400 flex items-center justify-center">
-                <svg
-                  className="w-5 h-5 text-white"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                  <path d="M2 17l10 5 10-5" />
-                  <path d="M2 12l10 5 10-5" />
-                </svg>
-              </div>
-              <span className="font-serif text-xl font-semibold">Vergleaf</span>
+            <div className="mb-3">
+              <OverleafWordmark variant="white" />
             </div>
-            <p className="text-sm text-gray-400 max-w-xs">Banking technology that has your back.</p>
+            <p className="text-sm text-gray-400 max-w-xs leading-relaxed">
+              The collaborative LaTeX editor for scientific writing.
+            </p>
           </div>
 
-          <nav className="flex gap-8">
+          <nav className="flex flex-wrap gap-4 sm:gap-8">
             <Link href="#" className="text-sm text-gray-400 hover:text-white transition-colors">
               Features
             </Link>
@@ -42,7 +32,7 @@ export function Footer() {
           </nav>
         </div>
 
-        <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="border-t border-gray-800 pt-6 sm:pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-sm text-gray-400">© 2077 Overleaf. All rights reserved.</p>
           <div className="flex items-center gap-4">
             <Link href="#" className="text-gray-400 hover:text-white transition-colors">
