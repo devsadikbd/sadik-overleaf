@@ -10,7 +10,7 @@ export function HeroSection() {
         src="/hero-section1.png"
         alt="Decorative Background"
         className="w-full h-full object-cover object-center"
-        style={{ objectPosition: 'center -150px' }}
+        style={{ objectPosition: 'center top' }}
       />
       
       </div>

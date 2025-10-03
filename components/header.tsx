@@ -13,8 +13,8 @@ export function Header() {
   return (
     <header className="w-full bg-[#F7F7FB] sticky top-0 ">
       <div className="container mx-auto sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center gap-8">
+        <div className="flex h-16 items-center justify-between pl-4 sm:pl-0">
+          <div className="flex items-center gap-50">
             <Link href="/" className="flex items-center gap-2">
               <OverleafWordmark />
             </Link>
