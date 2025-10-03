@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 
 export function FeaturesSection() {
   return (
-    <section className="py-12 sm:py-16 lg:py-20  mt-[250px] ">
+    <section className="py-12 sm:py-16 lg:py-20  mt-[300px] ">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 sm:mb-16">
           <div className="inline-block px-3 sm:px-4 py-1.5 rounded-full border-2 border-purple-600 text-purple-600 text-xs sm:text-sm font-medium mb-3 sm:mb-4">

@@ -5,17 +5,17 @@ export function HeroSection() {
   return (
     <section className="relative py-16 sm:py-24 bg-gradient-to-br from-purple-50 ">
       {/* Decorative icons - Hidden on mobile for cleaner look */}
-      <div className="absolute inset-0 pointer-events-none hidden md:block">
+      <div className="absolute  inset-0 pointer-events-none hidden md:block">
       <img
         src="/hero-section1.png"
         alt="Decorative Background"
-        className="w-full h-full object-cover"
+        className="w-full h-full object-center "
       />
       
       </div>
      
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center mb-8 sm:mb-12">
+        <div className="text-center mt-[30px] sm:mb-12">
           
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-balance leading-tight">
             Streamline Your <span className="text-purple-600"><br />Thesis Journey</span>
@@ -33,12 +33,12 @@ export function HeroSection() {
       
         
       </div>
-      <div className="max-w-5xl mx-auto mb-[-330px] mt-[50px] relative inset-0 pointer-events-none hidden md:block">
+      <div className="max-w-5xl mx-auto mb-[-350px] mt-[30px] relative inset-0 pointer-events-none hidden md:block">
           
             <img
               src="/hero-section.png"
               alt="Dashboard Preview"
-              className="w-full h-auto "
+              className="w-full h-auto ]"
             />
             
         </div>
