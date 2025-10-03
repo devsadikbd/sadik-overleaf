@@ -3,13 +3,14 @@ import { FileText, Package, Zap, ShoppingBag } from "lucide-react"
 
 export function HeroSection() {
   return (
-    <section className="relative py-16 sm:py-24 bg-gradient-to-br from-purple-50 ">
+    <section className="relative py-16 sm:py-24 bg-[#F7F7FB]">
       {/* Decorative icons - Hidden on mobile for cleaner look */}
-      <div className="absolute  inset-0 pointer-events-none hidden md:block">
+      <div className="absolute inset-0 pointer-events-none hidden md:block overflow-hidden">
       <img
         src="/hero-section1.png"
         alt="Decorative Background"
-        className="w-full h-full object-center "
+        className="w-full h-full object-cover object-center"
+        style={{ objectPosition: 'center -150px' }}
       />
       
       </div>
