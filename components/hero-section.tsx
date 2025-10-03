@@ -7,10 +7,11 @@ export function HeroSection() {
       {/* Decorative icons - Hidden on mobile for cleaner look */}
       <div className="absolute inset-0 pointer-events-none hidden md:block">
       <img
-        src="/hero-section.png"
+        src="/hero-section1.png"
         alt="Decorative Background"
         className="w-full h-full object-cover"
       />
+      
       </div>
      
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -29,15 +30,19 @@ export function HeroSection() {
             Start Writing Your Thesis
           </Button>
         </div>
-
-        <div className="max-w-5xl mx-auto">
+      
+        
+      </div>
+      <div className="max-w-5xl mx-auto relative">
+          
             <img
-              src="/image.png"
+              src="/hero-section.png"
               alt="Dashboard Preview"
               className="w-full h-auto"
             />
+            
         </div>
-      </div>
     </section>
+   
   )
 }
