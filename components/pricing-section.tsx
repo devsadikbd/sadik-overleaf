@@ -59,8 +59,9 @@ export function PricingSection() {
           </div>
 
           {/* Business Plan */}
-          <div className="bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-lg text-white">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-white/20 flex items-center justify-center mb-4 sm:mb-6">
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-lg relative overflow-hidden">
+              <div className="absolute inset-0 bg-cover  opacity-10" style={{ backgroundImage: "url('/image.png')" }}></div>
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-white/20 flex items-center justify-center mb-4 sm:mb-6">
              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M0 24C0 10.7452 10.7452 0 24 0C37.2548 0 48 10.7452 48 24C48 37.2548 37.2548 48 24 48C10.7452 48 0 37.2548 0 24Z" fill="#EEEBFF"/>
 <path d="M14 26.5001L23.6422 31.3212C23.7734 31.3868 23.839 31.4196 23.9078 31.4325C23.9687 31.4439 24.0313 31.4439 24.0922 31.4325C24.161 31.4196 24.2266 31.3868 24.3578 31.3212L34 26.5001M14 21.5001L23.6422 16.679C23.7734 16.6134 23.839 16.5806 23.9078 16.5677C23.9687 16.5562 24.0313 16.5562 24.0922 16.5677C24.161 16.5806 24.2266 16.6134 24.3578 16.679L34 21.5001L24.3578 26.3212C24.2266 26.3868 24.161 26.4196 24.0922 26.4325C24.0313 26.4439 23.9687 26.4439 23.9078 26.4325C23.839 26.4196 23.7734 26.3868 23.6422 26.3212L14 21.5001Z" stroke="#6F47AE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>

@@ -4,7 +4,7 @@ export function CtaSection() {
   return (
     <section className="py-12 sm:py-16 lg:py-20 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto bg-gradient-to-r from-purple-600 to-purple-500 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-12 text-center text-white">
+        <div className="max-w-4xl mx-auto rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-12 text-center text-white" style={{ backgroundImage: "url('/image copy.png')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 leading-tight">
             Start your 7-day free trial
           </h2>
