@@ -33,12 +33,12 @@ export function HeroSection() {
       
         
       </div>
-      <div className="max-w-5xl mx-auto relative">
+      <div className="max-w-5xl mx-auto mb-[-350px] mt-[50px] relative inset-0 pointer-events-none hidden md:block">
           
             <img
               src="/hero-section.png"
               alt="Dashboard Preview"
-              className="w-full h-auto"
+              className="w-full h-auto "
             />
             
         </div>
