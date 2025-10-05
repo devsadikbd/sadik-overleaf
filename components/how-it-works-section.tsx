@@ -2,19 +2,19 @@ export function HowItWorksSection() {
   return (
     <section className="py-12 sm:py-16 lg:py-20 ">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12 sm:mb-16">
+        <div className="text-center mb-8 sm:mb-12 lg:mb-16">
           <div className="inline-block px-3 sm:px-4 py-1.5 rounded-full border-2 border-purple-600 text-purple-600 text-xs sm:text-sm font-medium mb-3 sm:mb-4">
             HOW IT WORKS
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 text-balance leading-tight">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-3 sm:mb-4 text-balance leading-tight px-2 sm:px-0">
             Seamless Document Creation and Delivery
           </h2>
-          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          <p className="text-sm sm:text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed px-4 sm:px-0">
             Discover the Simple Steps to Create, Print, and Have Your Documents Delivered Right to Your Door.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 max-w-6xl mx-auto px-4 sm:px-0">
           {/* Step 01 */}
           <div className="bg-purple-50 rounded-2xl sm:rounded-3xl p-6 sm:p-8">
             <div className="text-xs sm:text-sm font-medium text-purple-600 mb-2 sm:mb-3">01</div>

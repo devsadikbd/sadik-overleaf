@@ -8,7 +8,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from "./ui/navigation-menu"
+} from "@/components/ui/navigation-menu"
 import { cn } from "@/lib/utils"
 
 const components: { title: string; href: string; description: string }[] = [
