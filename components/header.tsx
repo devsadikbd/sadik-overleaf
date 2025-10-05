@@ -45,9 +45,11 @@ export function Header() {
           
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center gap-3">
-            <Button variant="ghost" size="sm" className="px-4">
-              Log in
-            </Button>
+            <Link href="/login">
+              <Button variant="ghost" size="sm" className="px-4">
+                Log in
+              </Button>
+            </Link>
             <Button size="sm" className="bg-purple-600 text-white hover:bg-purple-700 px-4">
               Sign up
             </Button>
@@ -103,14 +105,16 @@ export function Header() {
               
               {/* Mobile Auth Buttons */}
               <div className="px-2 pt-4 border-t border-gray-200 mt-4 space-y-3">
-                <Button 
-                  variant="ghost" 
-                  size="lg" 
-                  className="w-full justify-center py-3 text-base font-medium"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Log in
-                </Button>
+                <Link href="/login">
+                  <Button 
+                    variant="ghost" 
+                    size="lg" 
+                    className="w-full justify-center py-3 text-base font-medium"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Log in
+                  </Button>
+                </Link>
                 <Button 
                   size="lg" 
                   className="w-full bg-purple-600 text-white hover:bg-purple-700 justify-center py-3 text-base font-medium"
