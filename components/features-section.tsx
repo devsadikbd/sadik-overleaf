@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 
 export function FeaturesSection() {
   return (
-    <section className="py-12 sm:py-16 lg:py-20  mt-[350px] ">
+    <section className="py-12 sm:py-16 lg:py-20  mt-[250px] ">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 sm:mb-16">
           <div className="inline-block px-3 sm:px-4 py-1.5 rounded-full border-2 border-purple-600 text-purple-600 text-xs sm:text-sm font-medium mb-3 sm:mb-4">
@@ -92,7 +92,7 @@ export function FeaturesSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 max-w-6xl mx-auto items-center">
           <div className="relative">
             <div className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 w-16 h-16 sm:w-24 sm:h-24 rounded-full" />
-            <div >
+            <div>
               <img
                 src="/features-section2.png"
                 alt="Collaboration Features"
@@ -100,7 +100,7 @@ export function FeaturesSection() {
               />
             </div>
           </div>
-
+           
           <div>
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-purple-100 flex items-center justify-center mb-4 sm:mb-6">
              <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -209,14 +209,6 @@ export function FeaturesSection() {
             <Button className="bg-purple-600 text-white hover:bg-purple-700 rounded-full text-sm sm:text-base w-full sm:w-auto">
               Start Writing Your Thesis
             </Button>
-          </div>
-
-          <div className="rounded-xl sm:rounded-2xl p-4 sm:p-8">
-            <img
-              src="/tools-section.png"
-              alt="LaTeX Editor"
-              className="w-full rounded-lg h-auto"
-            />
           </div>
         </div>
       </div>

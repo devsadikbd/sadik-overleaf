@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 
 export function WhyChooseSection() {
   return (
-    <section className="py-12 sm:py-16 lg:py-20 bg-white">
+    <section className="py-12 md:py-16 lg:py-20 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 sm:mb-16">
           <div className="inline-block px-3 sm:px-4 py-1.5 rounded-full border-2 border-purple-600 text-purple-600 text-xs sm:text-sm font-medium mb-3 sm:mb-4">
@@ -17,7 +17,7 @@ export function WhyChooseSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-6 lg:gap-8 max-w-6xl mx-auto">
           {/* Visual or Code Editor */}
           <div className="bg-purple-50 rounded-2xl sm:rounded-3xl p-6 sm:p-8">
             <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-purple-200 flex items-center justify-center mb-4 sm:mb-6">

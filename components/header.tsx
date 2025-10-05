@@ -50,9 +50,11 @@ export function Header() {
                 Log in
               </Button>
             </Link>
-            <Button size="sm" className="bg-purple-600 text-white hover:bg-purple-700 px-3 md:px-4 text-sm whitespace-nowrap">
-              Sign up
-            </Button>
+            <Link href="/signup">
+              <Button size="sm" className="bg-purple-600 text-white hover:bg-purple-700 px-3 md:px-4 text-sm whitespace-nowrap">
+                Sign up
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -115,13 +117,15 @@ export function Header() {
                     Log in
                   </Button>
                 </Link>
-                <Button 
-                  size="lg" 
-                  className="w-full bg-purple-600 text-white hover:bg-purple-700 justify-center py-3 text-base font-medium"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Sign up
-                </Button>
+                <Link href="/signup">
+                  <Button 
+                    size="lg" 
+                    className="w-full bg-purple-600 text-white hover:bg-purple-700 justify-center py-3 text-base font-medium"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Sign up
+                  </Button>
+                </Link>
               </div>
             </nav>
           </div>
