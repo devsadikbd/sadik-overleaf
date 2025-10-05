@@ -12,31 +12,31 @@ export function Header() {
 
   return (
     <header className="w-full bg-[#F7F7FB] sticky top-0 z-50">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center gap-6 lg:gap-8">
+      <div className="container mx-auto px-4 sm:px-6 md:px-6 lg:px-8">
+        <div className="flex h-14 md:h-16 items-center justify-between">
+          <div className="flex items-center gap-4 md:gap-6 lg:gap-8">
             <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-              <OverleafWordmark />
+              <OverleafWordmark className="h-6 md:h-7" />
             </Link>
             
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-6">
+            <nav className="hidden lg:flex items-center gap-4 xl:gap-6">
               <Link
                 href="#"
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                className="text-sm lg:text-sm font-medium text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
               >
                 Home
               </Link>
               <ProductsDropdown />
               <Link
                 href="#"
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                className="text-sm lg:text-sm font-medium text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
               >
                 Resources
               </Link>
               <Link
                 href="#"
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                className="text-sm lg:text-sm font-medium text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
               >
                 Pricing
               </Link>
@@ -44,36 +44,36 @@ export function Header() {
           </div>
           
           {/* Desktop Auth Buttons */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-2 md:gap-3">
             <Link href="/login">
-              <Button variant="ghost" size="sm" className="px-4">
+              <Button variant="ghost" size="sm" className="px-3 md:px-4 text-sm">
                 Log in
               </Button>
             </Link>
-            <Button size="sm" className="bg-purple-600 text-white hover:bg-purple-700 px-4">
+            <Button size="sm" className="bg-purple-600 text-white hover:bg-purple-700 px-3 md:px-4 text-sm whitespace-nowrap">
               Sign up
             </Button>
           </div>
 
           {/* Mobile Menu Button */}
           <button
-            className="lg:hidden p-2 -mr-2 touch-manipulation"
+            className="lg:hidden p-1.5 md:p-2 -mr-1 md:-mr-2 touch-manipulation"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
             aria-expanded={isMenuOpen}
           >
             {isMenuOpen ? (
-              <X className="h-6 w-6" />
+              <X className="h-5 w-5 md:h-6 md:w-6" />
             ) : (
-              <Menu className="h-6 w-6" />
+              <Menu className="h-5 w-5 md:h-6 md:w-6" />
             )}
           </button>
         </div>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="lg:hidden border-t border-gray-200 bg-white shadow-lg">
-            <nav className="py-4 space-y-1">
+          <div className="lg:hidden border-t border-gray-200 bg-white shadow-lg rounded-b-lg">
+            <nav className="py-3 md:py-4 space-y-1">
               <Link
                 href="#"
                 className="block px-4 py-3 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-gray-50 transition-colors rounded-md mx-2"

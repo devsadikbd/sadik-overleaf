@@ -4,8 +4,8 @@ import { FileText, Package, Zap, ShoppingBag } from "lucide-react"
 export function HeroSection() {
   return (
     <section className="relative py-16 sm:py-24 bg-[#F7F7FB]">
-      {/* Decorative icons - Hidden on mobile for cleaner look */}
-      <div className="absolute inset-0 pointer-events-none hidden md:block overflow-hidden">
+      {/* Decorative icons - Hidden on mobile and tablet for cleaner look */}
+      <div className="absolute inset-0 pointer-events-none hidden lg:block overflow-hidden">
       <img
         src="/hero-section1.png"
         alt="Decorative Background"
@@ -34,12 +34,12 @@ export function HeroSection() {
       
         
       </div>
-      <div className="max-w-5xl mx-auto mb-[-350px] mt-[30px] relative inset-0 pointer-events-none hidden md:block">
+      <div className="max-w-5xl mx-auto mb-[-100px] sm:mb-[-200px] md:mb-[-350px] mt-[20px] sm:mt-[30px] relative pointer-events-none">
           
             <img
               src="/hero-section.png"
               alt="Dashboard Preview"
-              className="w-full h-auto ]"
+              className="w-full h-auto"
             />
             
         </div>
