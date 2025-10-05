@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Facebook } from "lucide-react"
@@ -71,7 +72,9 @@ export function LoginSection() {
                 <div className="w-full max-w-md">
                     {/* Logo for Mobile */}
                     <div className="lg:hidden flex justify-center items-center mb-8">
-                        <OverleafWordmark className="mx-auto" />
+                        <Link href="/">
+                            <OverleafWordmark className="mx-auto cursor-pointer" />
+                        </Link>
                     </div>
 
                     {/* Tabs */}
@@ -148,7 +151,7 @@ export function LoginSection() {
 
                     {/* Social Login */}
                     <div className="flex justify-center gap-4">
-                        <Button variant="outline" size="icon" className="w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-white hover:bg-gray-50 border-gray-200">
+                        
                         <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect x="0.5" y="0.5" width="55" height="55" rx="7.5" fill="white"/>
                         <rect x="0.5" y="0.5" width="55" height="55" rx="7.5" stroke="#D4CAE3"/>    
@@ -164,7 +167,7 @@ export function LoginSection() {
                         </clipPath>
                         </defs>
                         </svg>
-                        </Button>
+                        
 
                         <Button variant="outline" size="icon" className="w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-white hover:bg-gray-50 border-gray-200">
                             <Facebook className="w-5 h-5 lg:w-6 lg:h-6 text-blue-600" fill="currentColor" />
