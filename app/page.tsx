@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <Header />
-      <main>
+      
         <HeroSection />
         <FeaturesSection />
         <HowItWorksSection />
@@ -20,7 +20,7 @@ export default function Home() {
         <WhyChooseSection />
         <PricingSection />
         <CtaSection />
-      </main>
+      
       <Footer />
     </div>
   )
