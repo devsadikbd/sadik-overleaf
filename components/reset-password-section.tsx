@@ -2,20 +2,26 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { OverleafWordmark } from "@/components/overleaf-logo"
 
-export function ForgotPasswordSection() {
-    const [email, setEmail] = useState("")
-    const [isSubmitted, setIsSubmitted] = useState(false)
+export function ResetPasswordSection() {
+    const [password, setPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
+    const router = useRouter()
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        if (email) {
-            setIsSubmitted(true)
+        if (password && confirmPassword && password === confirmPassword) {
+            // Redirect to email verification page
+            router.push("/email-verification")
         }
     }
+
+    const passwordsMatch = password && confirmPassword && password === confirmPassword
+    const isFormValid = password && confirmPassword && passwordsMatch
 
     return (
         <section className="min-h-screen flex">
@@ -71,8 +77,7 @@ export function ForgotPasswordSection() {
                     </div>
                 </div>
             </div>
-
-            {/* Right Side - Forgot Password Form (Responsive) */}
+            {/* Right Side - Reset Password Form (Responsive) */}
             <div className="flex-1 flex items-center justify-center p-6 lg:p-8 bg-gray-50">
                 <div className="w-full max-w-md">
                     {/* Logo for Mobile */}
@@ -82,60 +87,55 @@ export function ForgotPasswordSection() {
                         </Link>
                     </div>
 
+                    <h2 className="text-2xl lg:text-3xl font-bold mb-3 lg:mb-4 text-gray-900">
+                        Reset password
+                    </h2>
                     
+                   
 
-                    {!isSubmitted ? (
-                        <>
-                            <h2 className="text-2xl lg:text-3xl font-bold mb-3 lg:mb-4 text-gray-900">
-                                Forgot password
-                            </h2>
-                            
-                            <p className="text-gray-600 mb-6 lg:mb-8">
-                                Enter your email and we'll send you instructions to reset your password
-                            </p>
+                    {/* Form */}
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <Input
+                            id="password"
+                            type="password"
+                            placeholder="Enter new password"
+                            value={password}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                            className="h-12 lg:h-14 bg-white border-gray-200"
+                            required
+                        />
 
-                            {/* Form */}
-                            <form onSubmit={handleSubmit} className="space-y-4">
-                                <div>
-                                    
-                                    <Input
-                                        id="email"
-                                        type="email"
-                                        placeholder="Email"
-                                        value={email}
-                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-                                        className="h-12 lg:h-14 bg-white border-gray-200"
-                                        required
-                                    />
-                                </div>
+                        <Input
+                            id="confirmPassword"
+                            type="password"
+                            placeholder="Confirm new password"
+                            value={confirmPassword}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value)}
+                            className="h-12 lg:h-14 bg-white border-gray-200"
+                            required
+                        />
+                        <Button 
+                            type="submit"
+                            className={`w-full h-12 lg:h-14 font-medium mt-6 transition-colors ${
+                                isFormValid 
+                                    ? "bg-[#511da1] hover:bg-[#411687] text-white" 
+                                    : "bg-gray-300 hover:bg-gray-400 text-gray-700"
+                            }`}
+                            disabled={!isFormValid}
+                        >
+                            Reset password
+                        </Button>
+                    </form>
 
-                                <Link href="/email-verification" className="block">
-                                    <Button 
-                                        type="button"
-                                        className={`w-full h-12 lg:h-14 font-medium mt-6 transition-colors ${
-                                            email 
-                                                ? "bg-[#511da1] hover:bg-[#411687] text-white" 
-                                                : "bg-gray-300 hover:bg-gray-400 text-gray-700"
-                                        }`}
-                                    >
-                                       
-                                        Send Reset Link
-                                    </Button>
-                                </Link>
-                            </form>
-                        </>
-                    ) : null}
-
-                    {/* Additional Help */}
-                        <div className="mt-8 text-center">
-                            <p className="text-sm text-gray-600">
-                                Back to{" "}
-                                <Link href="/login" className="text-[#511da1] hover:text-[#411687] font-medium">
-                                    Log in
-                                </Link>
-                            </p>
-                        </div>
-                        </div>
+                    <div className="mt-8 text-center">
+                        <p className="text-sm text-gray-600">
+                            Back to{" "}
+                            <Link href="/login" className="text-[#511da1] hover:text-[#411687] font-medium">
+                                Log in
+                            </Link>
+                        </p>
+                    </div>
+                </div>
             </div>
         </section>
     )
