@@ -114,6 +114,7 @@ export function ResetPasswordSection() {
                             className="h-12 lg:h-14 bg-white border-gray-200"
                             required
                         />
+                        <Link href="/login">
                         <Button 
                             type="submit"
                             className={`w-full h-12 lg:h-14 font-medium mt-6 transition-colors ${
@@ -125,6 +126,7 @@ export function ResetPasswordSection() {
                         >
                             Reset password
                         </Button>
+                        </Link>
                     </form>
 
                     <div className="mt-8 text-center">
