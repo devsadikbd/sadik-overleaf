@@ -155,10 +155,10 @@ export function FeaturesSection() {
               Start Writing Your Thesis
             </Button>
           </div>
-        </div>
-        <div className="py-12 sm:py-16 lg:py-20 bg-white">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center max-w-6xl mx-auto">
+      </div>
+
+      {/* Choose the right tool */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 max-w-6xl mx-auto items-center mt-12 sm:mt-20">
           <div>
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-purple-100 flex items-center justify-center mb-4 sm:mb-6">
               <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -208,12 +208,23 @@ export function FeaturesSection() {
             </div>
             <Button className="bg-purple-600 text-white hover:bg-purple-700 rounded-full text-sm sm:text-base w-full sm:w-auto">
               Start Writing Your Thesis
-            </Button>
-          </div>
+        </Button>
+      </div>
+
+      {/* Image */}
+      <div className="relative">
+        <div className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 w-16 h-16 sm:w-24 sm:h-24 rounded-full" />
+        <div>
+          <img
+        src="/features-section3.png"
+        alt="Choose the right tool"
+        className="w-full rounded-lg h-auto"
+          />
         </div>
       </div>
-    </div>
+        </div>
       </div>
+        
     </section>
   )
 }
