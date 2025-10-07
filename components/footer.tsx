@@ -36,7 +36,7 @@ export function Footer() {
           <p className="text-sm text-gray-400">© 2077 Overleaf. All rights reserved.</p>
           <div className="flex items-center gap-4">
             <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-              <Twitter className="w-5 h-5" />
+              <Twitter className="w-5 h-5"/>
             </Link>
             <Link href="#" className="text-gray-400 hover:text-white transition-colors">
               <Linkedin className="w-5 h-5" />
