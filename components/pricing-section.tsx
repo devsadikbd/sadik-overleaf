@@ -3,19 +3,19 @@ import { Button } from "@/components/ui/button"
 
 export function PricingSection() {
   return (
-    <section className="py-12 sm:py-16 lg:py-20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-          <div className="inline-block px-3 sm:px-4 py-1.5 rounded-full border-2 border-purple-600 text-purple-600 text-xs sm:text-sm font-medium mb-3 sm:mb-4">
+    <section className="py-12 sm:py-16 lg:py-24 xl:py-32">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 max-w-7xl">
+        <div className="text-center mb-8 sm:mb-12 lg:mb-16 xl:mb-20">
+          <div className="inline-block px-3 sm:px-4 py-1.5 rounded-full border-2 border-purple-600 text-purple-600 text-xs sm:text-sm lg:text-base font-medium mb-3 sm:mb-4">
             PRICING
           </div>
-          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-3 sm:mb-4 leading-tight px-2 sm:px-0">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold mb-3 sm:mb-4 lg:mb-6 leading-tight px-2 sm:px-0">
             Accessible for All
           </h2>
-          <p className="text-sm sm:text-base lg:text-lg text-muted-foreground px-4 sm:px-0">Get Started Free, Upgrade Anytime</p>
+          <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-muted-foreground px-4 sm:px-0">Get Started Free, Upgrade Anytime</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 max-w-4xl mx-auto px-4 sm:px-0">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 xl:gap-12 max-w-5xl mx-auto px-4 sm:px-0">
           {/* Basic Plan */}
           <div className="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-lg">
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-purple-100 flex items-center justify-center mb-4 sm:mb-6">
