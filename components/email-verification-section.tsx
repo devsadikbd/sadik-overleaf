@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { OverleafWordmark } from "@/components/overleaf-logo"
 import { Mail, CheckCircle2 } from "lucide-react"
+import { verifyEmail } from "@/lib/keystone"
 
 export function EmailVerificationSection() {
     const [code, setCode] = useState(["", "", "", "", "", ""])
@@ -51,11 +52,21 @@ export function EmailVerificationSection() {
         inputRefs.current[nextIndex]?.focus()
     }
 
-    const handleConfirm = () => {
+    const [submitting, setSubmitting] = useState(false)
+    const [error, setError] = useState<string>("")
+
+    const handleConfirm = async () => {
         const fullCode = code.join("")
         if (fullCode.length === 6) {
-            // Handle verification logic here
-            console.log("Verification code:", fullCode)
+            setSubmitting(true)
+            setError("")
+            try {
+                await verifyEmail({ token: fullCode })
+            } catch (err: any) {
+                setError(err?.message || "Verification failed")
+            } finally {
+                setSubmitting(false)
+            }
         }
     }
 
@@ -161,6 +172,7 @@ to devsadikbd@gmail.com <span className="font-medium text-gray-900">{email}</spa
                         </div>
 
                         {/* Confirm Button */}
+                        {error && <p className="text-sm text-red-600 mb-2">{error}</p>}
                         <Link href="/reset-password" className="block">
                         <Button 
                             onClick={handleConfirm}
@@ -169,9 +181,9 @@ to devsadikbd@gmail.com <span className="font-medium text-gray-900">{email}</spa
                                     ? "bg-[#511da1] hover:bg-[#411687] text-white" 
                                     : "bg-gray-300 hover:bg-gray-400 text-gray-700"
                             }`}
-                            disabled={!isCodeComplete}
+                            disabled={!isCodeComplete || submitting}
                         >
-                            Confirm
+                            {submitting ? "Verifying..." : "Confirm"}
                         </Button>
                             </Link>
                         {/* Resend Button */}

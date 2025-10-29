@@ -2,21 +2,33 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { OverleafWordmark } from "@/components/overleaf-logo"
+import { resetPassword } from "@/lib/keystone"
 
 export function ResetPasswordSection() {
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
     const router = useRouter()
+    const params = useSearchParams()
+    const token = params.get("token") || ""
+    const [submitting, setSubmitting] = useState(false)
+    const [error, setError] = useState<string>("")
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        if (password && confirmPassword && password === confirmPassword) {
-            // Redirect to email verification page
-            router.push("/email-verification")
+        if (!(password && confirmPassword && password === confirmPassword) || !token) return
+        setSubmitting(true)
+        setError("")
+        try {
+            await resetPassword({ token, password })
+            router.push("/login")
+        } catch (err: any) {
+            setError(err?.message || "Reset failed")
+        } finally {
+            setSubmitting(false)
         }
     }
 
@@ -114,7 +126,8 @@ export function ResetPasswordSection() {
                             className="h-12 lg:h-14 bg-white border-gray-200"
                             required
                         />
-                        <Link href="/login">
+                        {(!token) && <p className="text-sm text-red-600">Missing token in URL</p>}
+                        {error && <p className="text-sm text-red-600">{error}</p>}
                         <Button 
                             type="submit"
                             className={`w-full h-12 lg:h-14 font-medium mt-6 transition-colors ${
@@ -122,11 +135,10 @@ export function ResetPasswordSection() {
                                     ? "bg-[#511da1] hover:bg-[#411687] text-white" 
                                     : "bg-gray-300 hover:bg-gray-400 text-gray-700"
                             }`}
-                            disabled={!isFormValid}
+                            disabled={submitting || !isFormValid || !token}
                         >
-                            Reset password
+                            {submitting ? "Resetting..." : "Reset password"}
                         </Button>
-                        </Link>
                     </form>
 
                     <div className="mt-8 text-center">

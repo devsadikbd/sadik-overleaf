@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev",
+    "dev": "next dev -p 7777 -H localhost",
+    "backend": "node sadik-overleaf-backend.js",
     "lint": "next lint",
     "start": "next start"
   },

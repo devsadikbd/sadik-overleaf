@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Facebook } from "lucide-react"
 import { OverleafWordmark } from "@/components/overleaf-logo"
+import { signup } from "@/lib/keystone"
 
 export function SignupSection() {
     const [firstName, setFirstName] = useState("")
@@ -13,6 +14,8 @@ export function SignupSection() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+    const [submitting, setSubmitting] = useState(false)
+    const [error, setError] = useState<string>("")
 
     
 
@@ -104,7 +107,19 @@ export function SignupSection() {
                     </h2>
 
                     {/* Form */}
-                    <form className="space-y-4">
+                    <form className="space-y-4" onSubmit={async (e) => {
+                        e.preventDefault()
+                        if (!(firstName && lastName && email && password) || password !== confirmPassword) return
+                        setSubmitting(true)
+                        setError("")
+                        try {
+                            await signup({ name: `${firstName} ${lastName}`.trim(), email, password, baseUrl: "http://localhost:7777" })
+                        } catch (err: any) {
+                            setError(err?.message || "Signup failed")
+                        } finally {
+                            setSubmitting(false)
+                        }
+                    }}>
                         <Input
                             type="text"
                             placeholder="First Name"
@@ -143,6 +158,7 @@ export function SignupSection() {
                             </Link>
                         </div>
 
+                        {error && <p className="text-sm text-red-600">{error}</p>}
                         <Button 
                             type="submit"
                             className={`w-full h-12 lg:h-14 font-medium mt-6 transition-colors ${
@@ -150,8 +166,9 @@ export function SignupSection() {
                                     ? "bg-[#511da1] hover:bg-[#411687] text-white" 
                                     : "bg-gray-300 hover:bg-gray-400 text-gray-700"
                             }`}
+                            disabled={submitting || !(firstName && lastName && email && password) || password !== confirmPassword}
                         >
-                            Register
+                            {submitting ? "Registering..." : "Register"}
                         </Button>
                     </form>
 

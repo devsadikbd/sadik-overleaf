@@ -5,15 +5,27 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { OverleafWordmark } from "@/components/overleaf-logo"
+import { forgotPassword } from "@/lib/keystone"
 
 export function ForgotPasswordSection() {
     const [email, setEmail] = useState("")
     const [isSubmitted, setIsSubmitted] = useState(false)
+    const [submitting, setSubmitting] = useState(false)
+    const [error, setError] = useState<string>("")
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         if (email) {
-            setIsSubmitted(true)
+            setSubmitting(true)
+            setError("")
+            try {
+                await forgotPassword({ email, baseUrl: "http://localhost:7777" })
+                setIsSubmitted(true)
+            } catch (err: any) {
+                setError(err?.message || "Request failed")
+            } finally {
+                setSubmitting(false)
+            }
         }
     }
 
@@ -109,19 +121,18 @@ export function ForgotPasswordSection() {
                                     />
                                 </div>
 
-                                <Link href="/email-verification" className="block">
-                                    <Button 
-                                        type="button"
-                                        className={`w-full h-12 lg:h-14 font-medium mt-6 transition-colors ${
-                                            email 
-                                                ? "bg-[#511da1] hover:bg-[#411687] text-white" 
-                                                : "bg-gray-300 hover:bg-gray-400 text-gray-700"
-                                        }`}
-                                    >
-                                       
-                                        Send Reset Link
-                                    </Button>
-                                </Link>
+                                {error && <p className="text-sm text-red-600">{error}</p>}
+                                <Button 
+                                    type="submit"
+                                    className={`w-full h-12 lg:h-14 font-medium mt-6 transition-colors ${
+                                        email 
+                                            ? "bg-[#511da1] hover:bg-[#411687] text-white" 
+                                            : "bg-gray-300 hover:bg-gray-400 text-gray-700"
+                                    }`}
+                                    disabled={submitting || !email}
+                                >
+                                    {submitting ? "Sending..." : "Send Reset Link"}
+                                </Button>
                             </form>
                         </>
                     ) : null}

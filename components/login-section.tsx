@@ -6,11 +6,28 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Facebook } from "lucide-react"
 import { OverleafWordmark } from "@/components/overleaf-logo"
+import { authenticateUserWithPassword } from "@/lib/keystone"
 
 export function LoginSection() {
     const [activeTab, setActiveTab] = useState<"login" | "register">("login")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [submitting, setSubmitting] = useState(false)
+    const [error, setError] = useState<string>("")
+
+    async function handleSubmit(e: React.FormEvent) {
+        e.preventDefault()
+        if (!email || !password) return
+        setSubmitting(true)
+        setError("")
+        try {
+            await authenticateUserWithPassword({ email, password })
+        } catch (err: any) {
+            setError(err?.message || "Login failed")
+        } finally {
+            setSubmitting(false)
+        }
+    }
 
     return (
         <section className="min-h-screen flex">
@@ -100,7 +117,7 @@ export function LoginSection() {
                     </h2>
 
                     {/* Form */}
-                    <form className="space-y-4">
+                    <form className="space-y-4" onSubmit={handleSubmit}>
                         <Input
                             type="email"
                             placeholder="Email"
@@ -121,15 +138,18 @@ export function LoginSection() {
                             <Link href="/forgot-password" className="text-sm text-gray-700 hover:text-gray-900 underline">
                                 Forgot your password?
                             </Link>
-                        </div>                        <Button 
+                        </div>
+                        {error && <p className="text-sm text-red-600">{error}</p>}
+                        <Button 
                             type="submit"
                             className={`w-full h-12 lg:h-14 font-medium mt-6 transition-colors ${
                                 email && password 
                                     ? "bg-[#511da1] hover:bg-[#411687] text-white" 
                                     : "bg-gray-300 hover:bg-gray-400 text-gray-700"
                             }`}
+                            disabled={submitting || !email || !password}
                         >
-                            Log in
+                            {submitting ? "Logging in..." : "Log in"}
                         </Button>
                     </form>
 
