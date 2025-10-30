@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { OverleafWordmark } from "@/components/overleaf-logo"
 import { Mail, CheckCircle2 } from "lucide-react"
-import { verifyEmail } from "@/lib/keystone"
 
 export function EmailVerificationSection() {
     const [code, setCode] = useState(["", "", "", "", "", ""])
@@ -54,14 +53,21 @@ export function EmailVerificationSection() {
 
     const [submitting, setSubmitting] = useState(false)
     const [error, setError] = useState<string>("")
+    const [verified, setVerified] = useState(false)
 
-    const handleConfirm = async () => {
+    async function handleConfirm() {
         const fullCode = code.join("")
         if (fullCode.length === 6) {
             setSubmitting(true)
             setError("")
             try {
-                await verifyEmail({ token: fullCode })
+                const url = `/api/auth/verify-email?token=${encodeURIComponent(fullCode)}`;
+                const res = await fetch(url, { method: "GET" })
+                if (!res.ok) {
+                    const msg = await res.text()
+                    throw new Error(msg || 'Verification failed')
+                }
+                setVerified(true)
             } catch (err: any) {
                 setError(err?.message || "Verification failed")
             } finally {
@@ -70,8 +76,8 @@ export function EmailVerificationSection() {
         }
     }
 
-    const handleResend = () => {
-        // Handle resend logic here
+    function handleResend() {
+        // You may want to implement resend logic with your REST backend
         console.log("Resending code to:", email)
     }
 
@@ -173,21 +179,22 @@ to devsadikbd@gmail.com <span className="font-medium text-gray-900">{email}</spa
 
                         {/* Confirm Button */}
                         {error && <p className="text-sm text-red-600 mb-2">{error}</p>}
-                        <Link href="/reset-password" className="block">
-                        <Button 
-                            onClick={handleConfirm}
-                            className={`w-full h-12 lg:h-14 font-medium mb-4 transition-colors ${
-                                isCodeComplete
-                                    ? "bg-[#511da1] hover:bg-[#411687] text-white" 
-                                    : "bg-gray-300 hover:bg-gray-400 text-gray-700"
-                            }`}
-                            disabled={!isCodeComplete || submitting}
-                        >
-                            {submitting ? "Verifying..." : "Confirm"}
-                        </Button>
-                            </Link>
+                        {verified ? (
+                            <p className="text-green-600 font-semibold mb-2">Email verified!</p>
+                        ) : (
+                            <Button 
+                                onClick={handleConfirm}
+                                className={`w-full h-12 lg:h-14 font-medium mb-4 transition-colors ${
+                                    isCodeComplete
+                                        ? "bg-[#511da1] hover:bg-[#411687] text-white" 
+                                        : "bg-gray-300 hover:bg-gray-400 text-gray-700"
+                                }`}
+                                disabled={!isCodeComplete || submitting}
+                            >
+                                {submitting ? "Verifying..." : "Confirm"}
+                            </Button>
+                        )}
                         {/* Resend Button */}
-                        <Link href="/email-verification" className="block">
                         <Button 
                             onClick={handleResend}
                             variant="outline"
@@ -195,7 +202,6 @@ to devsadikbd@gmail.com <span className="font-medium text-gray-900">{email}</spa
                         >
                             Resend Confirmation Code
                         </Button>
-                        </Link>
 
                         {/* Back to Login */}
                         <div className="mt-8">

@@ -6,7 +6,6 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { OverleafWordmark } from "@/components/overleaf-logo"
-import { resetPassword } from "@/lib/keystone"
 
 export function ResetPasswordSection() {
     const [password, setPassword] = useState("")
@@ -17,13 +16,21 @@ export function ResetPasswordSection() {
     const [submitting, setSubmitting] = useState(false)
     const [error, setError] = useState<string>("")
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    async function handleReset(e: React.FormEvent) {
         e.preventDefault()
         if (!(password && confirmPassword && password === confirmPassword) || !token) return
         setSubmitting(true)
         setError("")
         try {
-            await resetPassword({ token, password })
+            const res = await fetch("/api/auth/reset-password", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token, password }),
+            })
+            if (!res.ok) {
+                const msg = await res.text()
+                throw new Error(msg || 'Reset failed')
+            }
             router.push("/login")
         } catch (err: any) {
             setError(err?.message || "Reset failed")
@@ -106,7 +113,7 @@ export function ResetPasswordSection() {
                    
 
                     {/* Form */}
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleReset} className="space-y-4">
                         <Input
                             id="password"
                             type="password"

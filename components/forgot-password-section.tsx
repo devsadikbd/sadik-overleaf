@@ -5,7 +5,6 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { OverleafWordmark } from "@/components/overleaf-logo"
-import { forgotPassword } from "@/lib/keystone"
 
 export function ForgotPasswordSection() {
     const [email, setEmail] = useState("")
@@ -13,19 +12,26 @@ export function ForgotPasswordSection() {
     const [submitting, setSubmitting] = useState(false)
     const [error, setError] = useState<string>("")
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    async function handleForgotPassword(e: React.FormEvent) {
         e.preventDefault()
-        if (email) {
-            setSubmitting(true)
-            setError("")
-            try {
-                await forgotPassword({ email, baseUrl: "http://localhost:7777" })
-                setIsSubmitted(true)
-            } catch (err: any) {
-                setError(err?.message || "Request failed")
-            } finally {
-                setSubmitting(false)
+        if (!email) return
+        setSubmitting(true)
+        setError("")
+        try {
+            const res = await fetch("/api/auth/forgot-password", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email }),
+            })
+            if (!res.ok) {
+                const msg = await res.text()
+                throw new Error(msg || 'Request failed')
             }
+            setIsSubmitted(true)
+        } catch (err: any) {
+            setError(err?.message || "Request failed")
+        } finally {
+            setSubmitting(false)
         }
     }
 
@@ -107,7 +113,7 @@ export function ForgotPasswordSection() {
                             </p>
 
                             {/* Form */}
-                            <form onSubmit={handleSubmit} className="space-y-4">
+                            <form onSubmit={handleForgotPassword} className="space-y-4">
                                 <div>
                                     
                                     <Input
@@ -115,7 +121,7 @@ export function ForgotPasswordSection() {
                                         type="email"
                                         placeholder="Email"
                                         value={email}
-                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                                        onChange={e => setEmail(e.target.value)}
                                         className="h-12 lg:h-14 bg-white border-gray-200"
                                         required
                                     />
@@ -135,7 +141,7 @@ export function ForgotPasswordSection() {
                                 </Button>
                             </form>
                         </>
-                    ) : null}
+                    ) : <p className="text-green-600 font-semibold mt-6">Reset instructions sent to your email.</p>}
 
                     {/* Additional Help */}
                         <div className="mt-8 text-center">

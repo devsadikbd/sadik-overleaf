@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Facebook } from "lucide-react"
 import { OverleafWordmark } from "@/components/overleaf-logo"
-import { signup } from "@/lib/keystone"
 
 export function SignupSection() {
     const [firstName, setFirstName] = useState("")
@@ -17,7 +16,32 @@ export function SignupSection() {
     const [submitting, setSubmitting] = useState(false)
     const [error, setError] = useState<string>("")
 
-    
+    async function handleSignup(e: React.FormEvent) {
+        e.preventDefault()
+        if (!(firstName && lastName && email && password) || password !== confirmPassword) return
+        setSubmitting(true)
+        setError("")
+        try {
+            const res = await fetch("/api/auth/signup", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: `${firstName} ${lastName}`.trim(),
+                    email,
+                    password
+                })
+            })
+            if (!res.ok) {
+                const msg = await res.text()
+                throw new Error(msg || 'Signup failed')
+            }
+            // Optionally, redirect to login or another page
+        } catch (err: any) {
+            setError(err?.message || "Signup failed")
+        } finally {
+            setSubmitting(false)
+        }
+    }
 
     return (
         <section className="min-h-screen flex">
@@ -107,48 +131,40 @@ export function SignupSection() {
                     </h2>
 
                     {/* Form */}
-                    <form className="space-y-4" onSubmit={async (e) => {
-                        e.preventDefault()
-                        if (!(firstName && lastName && email && password) || password !== confirmPassword) return
-                        setSubmitting(true)
-                        setError("")
-                        try {
-                            await signup({ name: `${firstName} ${lastName}`.trim(), email, password, baseUrl: "http://localhost:7777" })
-                        } catch (err: any) {
-                            setError(err?.message || "Signup failed")
-                        } finally {
-                            setSubmitting(false)
-                        }
-                    }}>
+                    <form className="space-y-4" onSubmit={handleSignup}>
                         <Input
                             type="text"
                             placeholder="First Name"
                             value={firstName}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFirstName(e.target.value)}
+                            onChange={e => setFirstName(e.target.value)}
                             className="h-12 lg:h-14 bg-white border-gray-200"
                         />
-                        
                         <Input
                             type="text"
                             placeholder="Last Name"
                             value={lastName}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLastName(e.target.value)}
+                            onChange={e => setLastName(e.target.value)}
                             className="h-12 lg:h-14 bg-white border-gray-200"
                         />
-                        
                         <Input
                             type="email"
                             placeholder="Email"
                             value={email}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                            onChange={e => setEmail(e.target.value)}
                             className="h-12 lg:h-14 bg-white border-gray-200"
                         />
-                        
                         <Input
                             type="password"
                             placeholder="Password"
                             value={password}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                            onChange={e => setPassword(e.target.value)}
+                            className="h-12 lg:h-14 bg-white border-gray-200"
+                        />
+                        <Input
+                            type="password"
+                            placeholder="Confirm Password"
+                            value={confirmPassword}
+                            onChange={e => setConfirmPassword(e.target.value)}
                             className="h-12 lg:h-14 bg-white border-gray-200"
                         />
 
@@ -161,11 +177,7 @@ export function SignupSection() {
                         {error && <p className="text-sm text-red-600">{error}</p>}
                         <Button 
                             type="submit"
-                            className={`w-full h-12 lg:h-14 font-medium mt-6 transition-colors ${
-                                firstName && lastName && email && password 
-                                    ? "bg-[#511da1] hover:bg-[#411687] text-white" 
-                                    : "bg-gray-300 hover:bg-gray-400 text-gray-700"
-                            }`}
+                            className={`w-full h-12 lg:h-14 font-medium mt-6 transition-colors ${firstName && lastName && email && password ? "bg-[#511da1] hover:bg-[#411687] text-white" : "bg-gray-300 hover:bg-gray-400 text-gray-700"}`}
                             disabled={submitting || !(firstName && lastName && email && password) || password !== confirmPassword}
                         >
                             {submitting ? "Registering..." : "Register"}
