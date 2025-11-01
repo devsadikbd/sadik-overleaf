@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -14,6 +15,7 @@ export function SignupSection() {
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
     const [submitting, setSubmitting] = useState(false)
+    const router = useRouter()
     const [error, setError] = useState<string>("")
 
     async function handleSignup(e: React.FormEvent) {
@@ -21,21 +23,30 @@ export function SignupSection() {
         if (!(firstName && lastName && email && password) || password !== confirmPassword) return
         setSubmitting(true)
         setError("")
-        try {
-            const res = await fetch("/api/auth/signup", {
-                method: "POST",
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    name: `${firstName} ${lastName}`.trim(),
-                    email,
-                    password
+            try {
+                const res = await fetch("/api/auth/signup", {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: `${firstName} ${lastName}`.trim(),
+                        email,
+                        password
+                    })
                 })
-            })
-            if (!res.ok) {
-                const msg = await res.text()
-                throw new Error(msg || 'Signup failed')
-            }
-            // Optionally, redirect to login or another page
+                // Parse JSON body when possible so we can show a helpful message if backend didn't send email
+                let data: any = null
+                try {
+                    data = await res.json()
+                } catch (_) {
+                    // ignore parse errors
+                }
+                if (!res.ok) {
+                    const msg = data?.error || data?.message || (await res.text()) || 'Signup failed'
+                    throw new Error(msg)
+                }
+
+                // Backend returned success; redirect to email verification page and pass the email
+                router.push(`/email-verification?email=${encodeURIComponent(email)}`)
         } catch (err: any) {
             setError(err?.message || "Signup failed")
         } finally {

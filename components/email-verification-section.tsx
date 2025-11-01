@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
+import { useSearchParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,8 +10,37 @@ import { Mail, CheckCircle2 } from "lucide-react"
 
 export function EmailVerificationSection() {
     const [code, setCode] = useState(["", "", "", "", "", ""])
-    const [email] = useState("") // This would come from registration
+    const searchParams = useSearchParams()
+    const email = searchParams?.get("email") || ""
     const inputRefs = useRef<(HTMLInputElement | null)[]>([])
+    const router = useRouter()
+
+    useEffect(() => {
+        if (typeof window === "undefined") return
+        const urlParams = new URLSearchParams(window.location.search)
+        const token = urlParams.get("token")
+        if (token) {
+            fetch(`http://localhost:3000/api/auth/verify-email?token=${encodeURIComponent(token)}`, {
+                credentials: 'include',
+            })
+                .then(async (res) => {
+                    const text = await res.text()
+                    try { return JSON.parse(text) } catch { return text }
+                })
+                .then((data: any) => {
+                    if (data && (data.ok || data.message)) {
+                        alert('✅ Email verified successfully!')
+                        router.push('/login')
+                    } else {
+                        alert('❌ ' + (data?.error || 'Verification failed'))
+                    }
+                })
+                .catch((err) => {
+                    alert("❌ Cannot reach backend server. Make sure it's running on port 3000")
+                    console.error(err)
+                })
+        }
+    }, [router])
 
     const handleChange = (index: number, value: string) => {
         if (value.length > 1) {
@@ -68,6 +98,8 @@ export function EmailVerificationSection() {
                     throw new Error(msg || 'Verification failed')
                 }
                 setVerified(true)
+                // Redirect to login after successful verification
+                setTimeout(() => router.push('/login'), 1200)
             } catch (err: any) {
                 setError(err?.message || "Verification failed")
             } finally {
@@ -76,9 +108,29 @@ export function EmailVerificationSection() {
         }
     }
 
-    function handleResend() {
-        // You may want to implement resend logic with your REST backend
-        console.log("Resending code to:", email)
+    async function handleResend() {
+        if (!email) {
+            alert('Email not available to resend to.')
+            return
+        }
+        try {
+            const res = await fetch('http://localhost:3000/api/auth/resend-verification', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, baseUrl: 'http://localhost:7777' }),
+                credentials: 'include',
+            })
+            const json = await res.json().catch(() => null)
+            if (!res.ok) {
+                const msg = json?.error || json?.message || (await res.text()) || 'Resend failed'
+                alert('❌ ' + msg)
+                return
+            }
+            alert('✅ Verification email resent. Check your inbox (and spam).')
+        } catch (err) {
+            console.error(err)
+            alert("❌ Couldn't reach backend to resend verification. Make sure it's running on port 3000")
+        }
     }
 
     const isCodeComplete = code.every(digit => digit !== "")
@@ -154,8 +206,7 @@ export function EmailVerificationSection() {
                         </h2>
                         
                         <p className="text-gray-600 mb-8">
-                            Enter the 6 digit confirmation code sent 
-to devsadikbd@gmail.com <span className="font-medium text-gray-900">{email}</span>
+                            Enter the 6 digit confirmation code sent to <span className="font-medium text-gray-900">{email}</span>
                         </p>
 
                         {/* 6-Digit Code Input */}
