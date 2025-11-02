@@ -10,9 +10,20 @@ import {
 
 export type GraphQLVariables = Record<string, any> | undefined;
 
-const KEYSTONE_GRAPHQL_URL =
-  process.env.NEXT_PUBLIC_KEYSTONE_URL?.replace(/\/$/, "") ||
-  "http://localhost:3000/api/graphql";
+// Use our own API proxy instead of calling backend directly
+// This keeps the backend URL hidden and secure
+const getKeystoneUrl = () => {
+  if (typeof window !== 'undefined') {
+    // In browser: use our proxy
+    return `${window.location.origin}/api/graphql`
+  }
+  // On server: call backend directly
+  const backendUrl = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_KEYSTONE_URL || "http://localhost:3000"
+  const cleanUrl = backendUrl.replace(/\/$/, "").replace(/\/api\/graphql$/, "")
+  return `${cleanUrl}/api/graphql`
+}
+
+const KEYSTONE_GRAPHQL_URL = getKeystoneUrl();
 
 export async function graphqlRequest<T = any>(
   query: string,

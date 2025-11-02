@@ -18,8 +18,8 @@ export default function VerifyEmailPage() {
       return
     }
 
-    // Call backend verify endpoint directly
-    fetch(`http://localhost:3000/api/auth/verify-email?token=${encodeURIComponent(token)}`, {
+    // Call our API proxy instead of backend directly
+    fetch(`/api/backend/verify-email?token=${encodeURIComponent(token)}`, {
       credentials: "include",
     })
       .then(async (res) => {
@@ -43,7 +43,7 @@ export default function VerifyEmailPage() {
       .catch((err) => {
         console.error(err)
         setStatus("error")
-        setMessage("Cannot reach backend server. Make sure it's running on port 3000")
+        setMessage("Verification service unavailable. Please try again later.")
       })
   }, [router])
 

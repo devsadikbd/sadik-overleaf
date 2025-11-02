@@ -20,7 +20,8 @@ export function EmailVerificationSection() {
         const urlParams = new URLSearchParams(window.location.search)
         const token = urlParams.get("token")
         if (token) {
-            fetch(`http://localhost:3000/api/auth/verify-email?token=${encodeURIComponent(token)}`, {
+            // Call our own API proxy instead of backend directly
+            fetch(`/api/backend/verify-email?token=${encodeURIComponent(token)}`, {
                 credentials: 'include',
             })
                 .then(async (res) => {
@@ -36,7 +37,7 @@ export function EmailVerificationSection() {
                     }
                 })
                 .catch((err) => {
-                    alert("❌ Cannot reach backend server. Make sure it's running on port 3000")
+                    alert("❌ Verification service unavailable. Please try again later.")
                     console.error(err)
                 })
         }
@@ -113,11 +114,13 @@ export function EmailVerificationSection() {
             alert('Email not available to resend to.')
             return
         }
+        const frontendUrl = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:7777'
         try {
-            const res = await fetch('http://localhost:3000/api/auth/resend-verification', {
+            // Call our own API proxy
+            const res = await fetch(`/api/backend/resend-verification`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, baseUrl: 'http://localhost:7777' }),
+                body: JSON.stringify({ email, baseUrl: frontendUrl }),
                 credentials: 'include',
             })
             const json = await res.json().catch(() => null)
@@ -129,7 +132,7 @@ export function EmailVerificationSection() {
             alert('✅ Verification email resent. Check your inbox (and spam).')
         } catch (err) {
             console.error(err)
-            alert("❌ Couldn't reach backend to resend verification. Make sure it's running on port 3000")
+            alert("❌ Couldn't resend verification. Please try again later.")
         }
     }
 
