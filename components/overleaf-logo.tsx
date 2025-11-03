@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 
 interface OverleafLogoProps extends React.SVGProps<SVGSVGElement> {}
 
@@ -30,16 +30,16 @@ export function OverleafLogo({ className, ...props }: OverleafLogoProps) {
         fill="#8B5CF6"
       />
     </svg>
-  )
+  );
 }
 
 interface OverleafWordmarkProps {
-  className?: string
-  variant?: "default" | "white"
+  className?: string;
+  variant?: "default" | "white";
 }
 
 function Wordmark({ variant }: { variant?: "default" | "white" }) {
-  const fillColor = variant === "white" ? "white" : "black"
+  const fillColor = variant === "white" ? "white" : "black";
   return (
     <svg
       width="89"
@@ -55,7 +55,7 @@ function Wordmark({ variant }: { variant?: "default" | "white" }) {
         className="dark:fill-white"
       />
     </svg>
-  )
+  );
 }
 
 export function OverleafWordmark({
@@ -67,5 +67,5 @@ export function OverleafWordmark({
       <OverleafLogo width={24} height={24} />
       <Wordmark variant={variant} />
     </div>
-  )
+  );
 }

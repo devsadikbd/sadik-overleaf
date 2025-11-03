@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -8,8 +8,8 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu"
-import { cn } from "@/lib/utils"
+} from "@/components/ui/navigation-menu";
+import { cn } from "@/lib/utils";
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -33,9 +33,10 @@ const components: { title: string; href: string; description: string }[] = [
   {
     title: "For Institutions",
     href: "/docs/primitives/scroll-area",
-    description: "A secure, collaborative writing platform for your entire institution.",
+    description:
+      "A secure, collaborative writing platform for your entire institution.",
   },
-]
+];
 
 export function ProductsDropdown() {
   return (
@@ -61,7 +62,7 @@ export function ProductsDropdown() {
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
-  )
+  );
 }
 
 const ListItem = React.forwardRef<
@@ -86,6 +87,6 @@ const ListItem = React.forwardRef<
         </a>
       </NavigationMenuLink>
     </li>
-  )
-})
-ListItem.displayName = "ListItem"
+  );
+});
+ListItem.displayName = "ListItem";
