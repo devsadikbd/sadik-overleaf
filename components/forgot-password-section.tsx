@@ -40,19 +40,24 @@ export function ForgotPasswordSection() {
 
       setIsSubmitted(true);
     } catch (err: any) {
-      // Normalize some common low-level fetch errors into friendlier messages
+      // Display detailed error from the proxy (which now includes backend URL)
       const raw = err?.message || "";
-      if (
+
+      // First try: the proxy response is a structured error with backend URL
+      if (raw.includes("Backend error contacting")) {
+        // e.g., "Backend error contacting https://... : User not found"
+        setError(raw);
+      } else if (
         raw.includes("Failed to connect") ||
         raw.includes("fetch failed") ||
         raw.includes("ENOTFOUND") ||
         raw.includes("ECONNREFUSED")
       ) {
         setError(
-          "Could not contact the authentication service. Please try again later."
+          "Could not contact the authentication service. Please check your internet and try again later."
         );
       } else {
-        // Strip surrounding JSON if present
+        // Fallback: try to parse JSON if present
         try {
           const parsed = JSON.parse(raw);
           setError(parsed?.error || parsed?.message || String(parsed));
