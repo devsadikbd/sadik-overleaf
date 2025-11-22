@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Menu, X } from "lucide-react"
-import { useState } from "react"
-import { OverleafWordmark } from "@/components/overleaf-logo"
-import { ProductsDropdown } from "./products-dropdown"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Menu, X } from "lucide-react";
+import { useState } from "react";
+import { OverleafWordmark } from "@/components/overleaf-logo";
+import { ProductsDropdown } from "./products-dropdown";
 
 export function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <header className="w-full bg-[#F7F7FB] sticky top-0 z-50">
@@ -18,7 +18,7 @@ export function Header() {
             <Link href="/" className="flex items-center gap-2 flex-shrink-0">
               <OverleafWordmark className="h-6 md:h-7" />
             </Link>
-            
+
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-4 xl:gap-6">
               <Link
@@ -42,16 +42,23 @@ export function Header() {
               </Link>
             </nav>
           </div>
-          
+
           {/* Desktop Auth Buttons */}
           <div className="hidden lg:flex items-center gap-2 md:gap-3">
             <Link href="/login">
-              <Button variant="ghost" size="sm" className="px-3 md:px-4 text-sm">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="px-3 md:px-4 text-sm"
+              >
                 Log in
               </Button>
             </Link>
             <Link href="/signup">
-              <Button size="sm" className="bg-purple-600 text-white hover:bg-purple-700 px-3 md:px-4 text-sm whitespace-nowrap">
+              <Button
+                size="sm"
+                className="bg-purple-600 text-white hover:bg-purple-700 px-3 md:px-4 text-sm whitespace-nowrap"
+              >
                 Sign up
               </Button>
             </Link>
@@ -104,13 +111,13 @@ export function Header() {
               >
                 Pricing
               </Link>
-              
+
               {/* Mobile Auth Buttons */}
               <div className="px-2 pt-4 border-t border-gray-200 mt-4 space-y-3">
                 <Link href="/login">
-                  <Button 
-                    variant="ghost" 
-                    size="lg" 
+                  <Button
+                    variant="ghost"
+                    size="lg"
                     className="w-full justify-center py-3 text-base font-medium"
                     onClick={() => setIsMenuOpen(false)}
                   >
@@ -118,8 +125,8 @@ export function Header() {
                   </Button>
                 </Link>
                 <Link href="/signup">
-                  <Button 
-                    size="lg" 
+                  <Button
+                    size="lg"
                     className="w-full bg-purple-600 text-white hover:bg-purple-700 justify-center py-3 text-base font-medium"
                     onClick={() => setIsMenuOpen(false)}
                   >
@@ -132,5 +139,5 @@ export function Header() {
         )}
       </div>
     </header>
-  )
+  );
 }
