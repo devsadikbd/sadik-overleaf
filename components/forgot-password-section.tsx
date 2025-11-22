@@ -24,13 +24,42 @@ export function ForgotPasswordSection() {
         credentials: "include",
         body: JSON.stringify({ email }),
       });
+
       if (!res.ok) {
-        const msg = await res.text();
+        // Try to parse JSON error from the server proxy first
+        let msg: string | null = null;
+        try {
+          const json = await res.json();
+          msg = json?.error || json?.message || JSON.stringify(json);
+        } catch {
+          // fallback to text body
+          msg = await res.text();
+        }
         throw new Error(msg || "Request failed");
       }
+
       setIsSubmitted(true);
     } catch (err: any) {
-      setError(err?.message || "Request failed");
+      // Normalize some common low-level fetch errors into friendlier messages
+      const raw = err?.message || "";
+      if (
+        raw.includes("Failed to connect") ||
+        raw.includes("fetch failed") ||
+        raw.includes("ENOTFOUND") ||
+        raw.includes("ECONNREFUSED")
+      ) {
+        setError(
+          "Could not contact the authentication service. Please try again later."
+        );
+      } else {
+        // Strip surrounding JSON if present
+        try {
+          const parsed = JSON.parse(raw);
+          setError(parsed?.error || parsed?.message || String(parsed));
+        } catch {
+          setError(raw || "Request failed");
+        }
+      }
     } finally {
       setSubmitting(false);
     }
