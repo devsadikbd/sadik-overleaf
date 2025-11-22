@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { forgotPassword } from "@/lib/keystone"
+import { getBackendUrl } from "@/lib/api-config"
 
 export async function POST(req: NextRequest) {
     try {
@@ -13,7 +14,7 @@ export async function POST(req: NextRequest) {
         const origin = new URL(req.url).origin
         // Resolve the backend URL the server will use so we can include it in
         // error messages if the backend is unreachable.
-        const backendUrl = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_KEYSTONE_URL || "http://localhost:3000"
+        const backendUrl = getBackendUrl()
         try {
             await forgotPassword({ email, baseUrl: origin })
         } catch (err: any) {
@@ -29,10 +30,9 @@ export async function POST(req: NextRequest) {
         // If we hit this catch, it likely means the proxy itself couldn't parse
         // the request or another server-side issue. Include a hint about
         // BACKEND_URL so the deployer can verify environment variables.
-        const backendUrl = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_KEYSTONE_URL || "http://localhost:3000"
+        const backendUrl = getBackendUrl()
         const hint = backendUrl.includes("localhost") ? "(Hint: set BACKEND_URL in your deployment to your backend URL)" : ""
         return NextResponse.json({ error: err?.message || "Request failed", detail: hint }, { status: 400 })
     }
 }
-
 

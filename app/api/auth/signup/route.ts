@@ -12,11 +12,12 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
         }
 
-        await signup({ name, email, password })
+        // Derive the frontend origin so verification emails link to the correct domain
+        const origin = new URL(req.url).origin
+        await signup({ name, email, password, baseUrl: origin })
         return NextResponse.json({ ok: true }, { status: 200 })
     } catch (err: any) {
         return NextResponse.json({ error: err?.message || "Signup failed" }, { status: 400 })
     }
 }
-
 

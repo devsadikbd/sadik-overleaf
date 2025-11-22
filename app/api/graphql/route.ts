@@ -1,13 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-
-// Backend URL is kept secret on the server - never exposed to clients
-const getBackendUrl = () => {
-    const url = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_KEYSTONE_URL || "http://localhost:3000"
-    // Remove /api/graphql suffix if present
-    return url.replace(/\/api\/graphql$/, "")
-}
-
-const BACKEND_API_KEY = process.env.BACKEND_API_KEY // Optional: for extra security
+import { getBackendUrl, BACKEND_API_KEY } from "@/lib/api-config"
 
 export async function POST(req: NextRequest) {
     try {
@@ -36,11 +28,4 @@ export async function POST(req: NextRequest) {
             { status: 500 }
         )
     }
-}
-
-// Handle GET requests for GraphQL playground (optional)
-export async function GET(req: NextRequest) {
-    return NextResponse.json({ 
-        message: "GraphQL endpoint - use POST requests" 
-    })
 }

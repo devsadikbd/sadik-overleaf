@@ -1,11 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-
-const getBackendUrl = () => {
-    const url = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_KEYSTONE_URL || "http://localhost:3000"
-    return url.replace(/\/api\/graphql$/, "")
-}
-
-const BACKEND_API_KEY = process.env.BACKEND_API_KEY
+import { getBackendUrl, BACKEND_API_KEY } from "@/lib/api-config"
 
 export async function GET(req: NextRequest) {
     try {
