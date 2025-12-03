@@ -84,3 +84,60 @@ export interface VerifyEmailVariables {
   token: string;
 }
 
+/**
+ * 6. GET PROJECTS - Fetch all projects for the current user
+ */
+export const GET_PROJECTS_QUERY = `
+  query GetProjects {
+    projects {
+      id
+      title
+      owner {
+        id
+        name
+        email
+      }
+      updatedAt
+      createdAt
+    }
+  }
+`;
+
+/**
+ * 7. GET CURRENT USER - Get authenticated user info
+ */
+export const GET_CURRENT_USER_QUERY = `
+  query GetCurrentUser {
+    authenticatedItem {
+      ... on User {
+        id
+        name
+        email
+      }
+    }
+  }
+`;
+
+export interface Project {
+  id: string;
+  title: string;
+  owner: {
+    id: string;
+    name: string;
+    email: string;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+
+export interface ProjectsResponse {
+  projects: Project[];
+}
+
+export interface CurrentUserResponse {
+  authenticatedItem: {
+    id: string;
+    name: string;
+    email: string;
+  } | null;
+}
