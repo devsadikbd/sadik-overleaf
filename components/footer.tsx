@@ -46,7 +46,7 @@ export function Footer() {
 
         <div className="border-t border-gray-800 pt-6 sm:pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-sm text-gray-400">
-            © 2077 Overleaf. All rights reserved.
+            © 2025 Overleaf. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
             <Link

@@ -119,9 +119,9 @@ export function ProjectsDashboard() {
   };
 
   return (
-    <div className="flex min-h-screen w-full">
+    <div className="flex h-screen w-full overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-64 min-h-screen bg-[#2d2546] text-white p-6 flex flex-col">
+      <aside className="w-64 h-screen bg-[#2d2546] text-white p-6 flex flex-col overflow-y-auto">
         <div className="mb-8">
           <Link href="/#" className="flex items-center gap-2">
             <OverleafWordmark variant="white" className="h-6" />
@@ -190,9 +190,9 @@ export function ProjectsDashboard() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 bg-gray-50">
+      <main className="flex-1 bg-gray-50 flex flex-col h-screen overflow-hidden">
         {/* Top Header */}
-        <header className="bg-white border-b px-8 py-4 flex items-center justify-between">
+        <header className="bg-white border-b px-8 py-4 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-6">
             <Link
               href="#"
@@ -240,7 +240,7 @@ export function ProjectsDashboard() {
         </header>
 
         {/* Content Area */}
-        <div className="p-8">
+        <div className="p-8 flex-1 overflow-y-auto">
           {loading ? (
             /* Loading State */
             <div className="flex flex-col items-center justify-center py-20">
@@ -465,5 +465,5 @@ export function ProjectsDashboard() {
         </div>
       </main>
     </div>
-  );
+  )
 }
