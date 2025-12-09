@@ -25,11 +25,25 @@ export async function POST(req: NextRequest) {
     }
 
     // Create project via GraphQL
-    const data = await graphqlRequest(CREATE_PROJECT_MUTATION, { title: title.trim() });
-
-    return NextResponse.json(data, { status: 201 });
+    try {
+      const data = await graphqlRequest(CREATE_PROJECT_MUTATION, { title: title.trim() });
+      return NextResponse.json(data, { status: 201 });
+    } catch (graphqlError: any) {
+      console.error("GraphQL error creating project:", graphqlError);
+      return NextResponse.json(
+        { error: graphqlError.message || "Failed to create project via GraphQL" },
+        { status: 500 }
+      );
+    }
   } catch (error: any) {
     console.error("Create project error:", error);
+    // Handle JSON parsing errors
+    if (error instanceof SyntaxError) {
+      return NextResponse.json(
+        { error: "Invalid JSON in request body" },
+        { status: 400 }
+      );
+    }
     return NextResponse.json(
       { error: error.message || "Failed to create project" },
       { status: 500 }

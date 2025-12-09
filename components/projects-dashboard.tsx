@@ -22,9 +22,7 @@ import {
 import { graphqlRequest } from "@/lib/keystone";
 import {
   GET_PROJECTS_QUERY,
-  CREATE_PROJECT_MUTATION,
   type Project as ProjectType,
-  type CreateProjectResponse,
 } from "@/lib/graphql/queries";
 
 interface Project {
@@ -87,10 +85,19 @@ export function ProjectsDashboard() {
       const timestamp = new Date().toISOString().split('T')[0];
       const defaultTitle = `Untitled Project - ${timestamp}`;
 
-      const data = await graphqlRequest<CreateProjectResponse>(
-        CREATE_PROJECT_MUTATION,
-        { title: defaultTitle }
-      );
+      // Call the API route to create the project
+      const response = await fetch('/api/projects/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title: defaultTitle }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to create project');
+      }
 
       // Refresh the projects list after creation
       await fetchProjects();
