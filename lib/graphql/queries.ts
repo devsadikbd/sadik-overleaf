@@ -141,3 +141,30 @@ export interface CurrentUserResponse {
     email: string;
   } | null;
 }
+
+/**
+ * 8. CREATE PROJECT - Create a new project
+ */
+export const CREATE_PROJECT_MUTATION = `
+  mutation CreateProject($title: String!) {
+    createProject(data: { title: $title }) {
+      id
+      title
+      owner {
+        id
+        name
+        email
+      }
+      updatedAt
+      createdAt
+    }
+  }
+`;
+
+export interface CreateProjectVariables {
+  title: string;
+}
+
+export interface CreateProjectResponse {
+  createProject: Project;
+}
