@@ -41,6 +41,7 @@ export function ProjectsDashboard() {
   const [selectedProjects, setSelectedProjects] = useState<Set<string>>(
     new Set()
   );
+  const [creating, setCreating] = useState(false);
 
   // Fetch projects from backend
   useEffect(() => {
@@ -72,6 +73,39 @@ export function ProjectsDashboard() {
       setProjects([]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const createProject = async () => {
+    try {
+      setCreating(true);
+      setError(null);
+
+      // Generate a default project title with timestamp
+      const timestamp = new Date().toISOString().split('T')[0];
+      const defaultTitle = `Untitled Project - ${timestamp}`;
+
+      // Call the API route to create the project
+      const response = await fetch('/api/projects/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title: defaultTitle }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to create project');
+      }
+
+      // Refresh the projects list after creation
+      await fetchProjects();
+    } catch (err: any) {
+      console.error("Failed to create project:", err);
+      setError(err.message || "Failed to create project");
+    } finally {
+      setCreating(false);
     }
   };
 
@@ -128,9 +162,17 @@ export function ProjectsDashboard() {
           </Link>
         </div>
 
-        <Button className="w-full mb-6 bg-[#7c3fed] hover:bg-[#6a35d4] text-white font-medium">
-          <Plus className="w-4 h-4 mr-2" />
-          New Project
+        <Button 
+          className="w-full mb-6 bg-[#7c3fed] hover:bg-[#6a35d4] text-white font-medium"
+          onClick={createProject}
+          disabled={creating}
+        >
+          {creating ? (
+            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+          ) : (
+            <Plus className="w-4 h-4 mr-2" />
+          )}
+          {creating ? "Creating..." : "New Project"}
         </Button>
 
         <nav className="space-y-1 mb-6">
@@ -349,9 +391,17 @@ export function ProjectsDashboard() {
                 <br />
                 projects. Let's get started!
               </p>
-              <Button className="bg-gray-900 hover:bg-gray-800 text-white px-6">
-                <Plus className="w-4 h-4 mr-2" />
-                New Project
+              <Button 
+                className="bg-gray-900 hover:bg-gray-800 text-white px-6"
+                onClick={createProject}
+                disabled={creating}
+              >
+                {creating ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <Plus className="w-4 h-4 mr-2" />
+                )}
+                {creating ? "Creating..." : "New Project"}
               </Button>
             </div>
           ) : (
