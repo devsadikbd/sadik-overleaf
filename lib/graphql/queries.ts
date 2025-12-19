@@ -85,7 +85,34 @@ export interface VerifyEmailVariables {
 }
 
 /**
- * 6. GET PROJECTS - Fetch all projects for the current user
+ * 6. CREATE PROJECT - Create a new project
+ */
+export const CREATE_PROJECT_MUTATION = `
+  mutation CreateProject($title: String!) {
+    createProject(data: { title: $title }) {
+      id
+      title
+      owner {
+        id
+        name
+        email
+      }
+      updatedAt
+      createdAt
+    }
+  }
+`;
+
+export interface CreateProjectVariables {
+  title: string;
+}
+
+export interface CreateProjectResponse {
+  createProject: Project;
+}
+
+/**
+ * 7. GET PROJECTS - Fetch all projects for the current user
  */
 export const GET_PROJECTS_QUERY = `
   query GetProjects {
@@ -104,7 +131,7 @@ export const GET_PROJECTS_QUERY = `
 `;
 
 /**
- * 7. GET CURRENT USER - Get authenticated user info
+ * 8. GET CURRENT USER - Get authenticated user info
  */
 export const GET_CURRENT_USER_QUERY = `
   query GetCurrentUser {

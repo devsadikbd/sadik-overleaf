@@ -5,6 +5,7 @@ import Link from "next/link";
 import { OverleafWordmark } from "@/components/overleaf-logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { CreateProjectButton } from "@/components/create-project-modal";
 import {
   Plus,
   FolderOpen,
@@ -22,7 +23,10 @@ import {
 import { graphqlRequest } from "@/lib/keystone";
 import {
   GET_PROJECTS_QUERY,
+  CREATE_PROJECT_MUTATION,
   type Project as ProjectType,
+  type CreateProjectVariables,
+  type CreateProjectResponse,
 } from "@/lib/graphql/queries";
 
 interface Project {
@@ -96,6 +100,29 @@ export function ProjectsDashboard() {
     return date.toLocaleDateString();
   };
 
+  const handleCreateProject = async (projectName: string) => {
+    try {
+      const data = await graphqlRequest<
+        CreateProjectResponse,
+        CreateProjectVariables
+      >(CREATE_PROJECT_MUTATION, { title: projectName });
+
+      // Add the new project to the list
+      const newProject: Project = {
+        id: data.createProject.id,
+        title: data.createProject.title,
+        owner: data.createProject.owner?.name || "Unknown",
+        lastModified: formatDate(data.createProject.createdAt),
+        modifiedBy: data.createProject.owner?.name || "Unknown",
+      };
+
+      setProjects([newProject, ...projects]);
+    } catch (err: any) {
+      console.error("Failed to create project:", err);
+      throw new Error(err.message || "Failed to create project");
+    }
+  };
+
   const filteredProjects = projects.filter((project) =>
     project.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -128,12 +155,12 @@ export function ProjectsDashboard() {
           </Link>
         </div>
 
-        <Button className="w-full mb-6 bg-[#7c3fed] hover:bg-[#6a35d4] text-white font-medium">
-          <Plus className="w-4 h-4 mr-2" />
-          New Project
-        </Button>
+        <CreateProjectButton
+          onCreateProject={handleCreateProject}
+          variant="sidebar"
+        />
 
-        <nav className="space-y-1 mb-6">
+        <nav className="space-y-1 mb-6 mt-6">
           <Link
             href="/projects"
             className="flex items-center gap-3 px-3 py-2 rounded-lg bg-[#3d3254] text-white"
@@ -349,10 +376,10 @@ export function ProjectsDashboard() {
                 <br />
                 projects. Let's get started!
               </p>
-              <Button className="bg-gray-900 hover:bg-gray-800 text-white px-6">
-                <Plus className="w-4 h-4 mr-2" />
-                New Project
-              </Button>
+              <CreateProjectButton
+                onCreateProject={handleCreateProject}
+                variant="main"
+              />
             </div>
           ) : (
             /* Projects List */
@@ -465,5 +492,5 @@ export function ProjectsDashboard() {
         </div>
       </main>
     </div>
-  )
+  );
 }
