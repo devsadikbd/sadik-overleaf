@@ -2,6 +2,7 @@
 
 import {
   LOGIN_MUTATION,
+  LOGOUT_MUTATION,
   SIGNUP_MUTATION,
   FORGOT_PASSWORD_MUTATION,
   RESET_PASSWORD_MUTATION,
@@ -56,6 +57,10 @@ export async function authenticateUserWithPassword(args: {
   password: string;
 }): Promise<any> {
   return graphqlRequest(LOGIN_MUTATION, args);
+}
+
+export async function logout(): Promise<any> {
+  return graphqlRequest(LOGOUT_MUTATION);
 }
 
 export async function signup(args: {

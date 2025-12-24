@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Facebook } from "lucide-react";
@@ -9,6 +10,7 @@ import { OverleafWordmark } from "@/components/overleaf-logo";
 import { authenticateUserWithPassword } from "@/lib/keystone";
 
 export function LoginSection() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,7 +23,21 @@ export function LoginSection() {
     setSubmitting(true);
     setError("");
     try {
-      await authenticateUserWithPassword({ email, password });
+      const result = await authenticateUserWithPassword({ email, password });
+
+      // Check if login was successful
+      if (
+        result?.authenticateUserWithPassword?.__typename ===
+        "UserAuthenticationWithPasswordSuccess"
+      ) {
+        // Redirect to projects page on successful login and force reload
+        window.location.href = "/projects";
+      } else if (result?.authenticateUserWithPassword?.message) {
+        // Show error message from backend
+        setError(result.authenticateUserWithPassword.message);
+      } else {
+        setError("Login failed. Please check your credentials.");
+      }
     } catch (err: any) {
       setError(err?.message || "Login failed");
     } finally {

@@ -6,6 +6,9 @@ import { OverleafWordmark } from "@/components/overleaf-logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CreateProjectButton } from "@/components/create-project-modal";
+import { TrashProjectModal } from "@/components/trash-project-modal";
+import { CopyProjectModal } from "@/components/copy-project-modal";
+import { ArchiveProjectModal } from "@/components/archive-project-modal";
 import {
   Plus,
   FolderOpen,
@@ -19,14 +22,28 @@ import {
   FileText,
   Trash2,
   Loader2,
+  LogOut,
+  ChevronDown,
 } from "lucide-react";
-import { graphqlRequest } from "@/lib/keystone";
+import { graphqlRequest, logout } from "@/lib/keystone";
 import {
   GET_PROJECTS_QUERY,
+  GET_MY_PROJECTS_QUERY,
   CREATE_PROJECT_MUTATION,
+  COPY_PROJECT_MUTATION,
+  DELETE_PROJECT_MUTATION,
+  ARCHIVE_PROJECT_MUTATION,
+  GET_CURRENT_USER_QUERY,
   type Project as ProjectType,
   type CreateProjectVariables,
   type CreateProjectResponse,
+  type CopyProjectVariables,
+  type CopyProjectResponse,
+  type DeleteProjectVariables,
+  type DeleteProjectResponse,
+  type ArchiveProjectVariables,
+  type ArchiveProjectResponse,
+  type CurrentUserResponse,
 } from "@/lib/graphql/queries";
 
 interface Project {
@@ -45,23 +62,145 @@ export function ProjectsDashboard() {
   const [selectedProjects, setSelectedProjects] = useState<Set<string>>(
     new Set()
   );
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState<{
+    id: string;
+    name: string;
+    email: string;
+  } | null>(null);
+  const [trashModalOpen, setTrashModalOpen] = useState(false);
+  const [projectToDelete, setProjectToDelete] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
+  const [copyModalOpen, setCopyModalOpen] = useState(false);
+  const [projectToCopy, setProjectToCopy] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
+  const [archiveModalOpen, setArchiveModalOpen] = useState(false);
+  const [projectToArchive, setProjectToArchive] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
 
-  // Fetch projects from backend
+  // Fetch current user and projects from backend
   useEffect(() => {
+    // Initial check
+    checkAuthentication();
     fetchProjects();
+
+    // Re-check when window regains focus or becomes visible
+    const handleFocus = () => {
+      console.log("Window focused, checking auth...");
+      checkAuthentication();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        console.log("Page visible, checking auth...");
+        checkAuthentication();
+      }
+    };
+
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest(".user-dropdown")) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest(".user-dropdown")) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
+
+  const checkAuthentication = async () => {
+    try {
+      const data = await graphqlRequest<CurrentUserResponse>(
+        GET_CURRENT_USER_QUERY
+      );
+
+      console.log("Authentication check result:", data);
+
+      if (data?.authenticatedItem) {
+        setIsAuthenticated(true);
+        setCurrentUser(data.authenticatedItem);
+        console.log("User authenticated:", data.authenticatedItem);
+      } else {
+        setIsAuthenticated(false);
+        setCurrentUser(null);
+        console.log("User not authenticated");
+      }
+    } catch (err: any) {
+      console.error("Failed to check authentication:", err);
+      setIsAuthenticated(false);
+      setCurrentUser(null);
+    }
+  };
 
   const fetchProjects = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const data = await graphqlRequest<{ projects: ProjectType[] }>(
-        GET_PROJECTS_QUERY
-      );
+      // Use GET_MY_PROJECTS_QUERY to fetch only the authenticated user's projects
+      const data = await graphqlRequest<{
+        authenticatedItem: {
+          id: string;
+          name: string;
+          email: string;
+          projects: ProjectType[];
+        } | null;
+      }>(GET_MY_PROJECTS_QUERY);
+
+      // Check if user is authenticated
+      if (!data.authenticatedItem || !data.authenticatedItem.projects) {
+        setProjects([]);
+        return;
+      }
+
+      // Ensure projects is an array
+      const projectsArray = Array.isArray(data.authenticatedItem.projects)
+        ? data.authenticatedItem.projects
+        : [];
 
       // Transform backend data to component format
-      const transformedProjects: Project[] = data.projects.map((project) => ({
+      const transformedProjects: Project[] = projectsArray.map((project) => ({
         id: project.id,
         title: project.title,
         owner: project.owner?.name || "Unknown",
@@ -123,6 +262,93 @@ export function ProjectsDashboard() {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      // Redirect to home page after logout
+      window.location.href = "/";
+    } catch (err: any) {
+      console.error("Failed to logout:", err);
+    }
+  };
+
+  const handleCopyClick = (projectId: string, projectTitle: string) => {
+    setProjectToCopy({ id: projectId, title: projectTitle });
+    setCopyModalOpen(true);
+  };
+
+  const handleCopyConfirm = async (newName: string) => {
+    if (!projectToCopy) return;
+
+    try {
+      const data = await graphqlRequest<
+        CopyProjectResponse,
+        CopyProjectVariables
+      >(COPY_PROJECT_MUTATION, { id: projectToCopy.id });
+
+      // Add the copied project to the list
+      const copiedProject: Project = {
+        id: data.copyProject.id,
+        title: data.copyProject.title,
+        owner: data.copyProject.owner?.name || "Unknown",
+        lastModified: formatDate(data.copyProject.createdAt),
+        modifiedBy: data.copyProject.owner?.name || "Unknown",
+      };
+
+      setProjects([copiedProject, ...projects]);
+      setProjectToCopy(null);
+    } catch (err: any) {
+      console.error("Failed to copy project:", err);
+      throw new Error(err.message || "Failed to copy project");
+    }
+  };
+
+  const handleDeleteClick = (projectId: string, projectTitle: string) => {
+    setProjectToDelete({ id: projectId, title: projectTitle });
+    setTrashModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!projectToDelete) return;
+
+    try {
+      await graphqlRequest<DeleteProjectResponse, DeleteProjectVariables>(
+        DELETE_PROJECT_MUTATION,
+        { id: projectToDelete.id }
+      );
+
+      // Remove the project from the list
+      setProjects(projects.filter((p) => p.id !== projectToDelete.id));
+      setProjectToDelete(null);
+    } catch (err: any) {
+      console.error("Failed to delete project:", err);
+      throw new Error(err.message || "Failed to delete project");
+    }
+  };
+
+  const handleArchiveClick = (projectId: string, projectTitle: string) => {
+    setProjectToArchive({ id: projectId, title: projectTitle });
+    setArchiveModalOpen(true);
+  };
+
+  const handleArchiveConfirm = async () => {
+    if (!projectToArchive) return;
+
+    try {
+      await graphqlRequest<ArchiveProjectResponse, ArchiveProjectVariables>(
+        ARCHIVE_PROJECT_MUTATION,
+        { id: projectToArchive.id }
+      );
+
+      // Remove the archived project from the list
+      setProjects(projects.filter((p) => p.id !== projectToArchive.id));
+      setProjectToArchive(null);
+    } catch (err: any) {
+      console.error("Failed to archive project:", err);
+      throw new Error(err.message || "Failed to archive project");
+    }
+  };
+
   const filteredProjects = projects.filter((project) =>
     project.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -158,6 +384,7 @@ export function ProjectsDashboard() {
         <CreateProjectButton
           onCreateProject={handleCreateProject}
           variant="sidebar"
+          isAuthenticated={isAuthenticated}
         />
 
         <nav className="space-y-1 mb-6 mt-6">
@@ -260,9 +487,54 @@ export function ProjectsDashboard() {
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center text-white font-semibold">
-              S
-            </div>
+            {isAuthenticated && currentUser ? (
+              <div className="relative user-dropdown">
+                <button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+                >
+                  <span className="text-sm text-gray-700 font-medium">
+                    {currentUser.name}
+                  </span>
+                  <div className="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center text-white font-semibold">
+                    {currentUser.name && currentUser.name.length > 0
+                      ? currentUser.name.charAt(0).toUpperCase()
+                      : "U"}
+                  </div>
+                  <ChevronDown
+                    className={`w-4 h-4 text-gray-500 transition-transform ${
+                      isDropdownOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {/* Dropdown Menu */}
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                    <div className="p-2">
+                      <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link href="/login">
+                  <Button variant="outline" size="sm">
+                    Login
+                  </Button>
+                </Link>
+                <Link href="/signup">
+                  <Button size="sm">Sign Up</Button>
+                </Link>
+              </div>
+            )}
           </div>
         </header>
 
@@ -379,6 +651,7 @@ export function ProjectsDashboard() {
               <CreateProjectButton
                 onCreateProject={handleCreateProject}
                 variant="main"
+                isAuthenticated={isAuthenticated}
               />
             </div>
           ) : (
@@ -446,8 +719,8 @@ export function ProjectsDashboard() {
                         </td>
                         <td className="py-3 px-4">
                           <Link
-                            href={`/project/${project.id}`}
-                            className="text-gray-900 hover:text-purple-600"
+                            href={`/editor/${project.id}`}
+                            className="text-gray-900 hover:text-purple-600 font-medium"
                           >
                             {project.title}
                           </Link>
@@ -466,13 +739,28 @@ export function ProjectsDashboard() {
                             <button className="p-1.5 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded">
                               <Download className="w-4 h-4" />
                             </button>
-                            <button className="p-1.5 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded">
+                            <button
+                              onClick={() =>
+                                handleCopyClick(project.id, project.title)
+                              }
+                              className="p-1.5 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded"
+                            >
                               <Copy className="w-4 h-4" />
                             </button>
-                            <button className="p-1.5 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded">
+                            <button
+                              onClick={() =>
+                                handleArchiveClick(project.id, project.title)
+                              }
+                              className="p-1.5 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded"
+                            >
                               <Archive className="w-4 h-4" />
                             </button>
-                            <button className="p-1.5 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded">
+                            <button
+                              onClick={() =>
+                                handleDeleteClick(project.id, project.title)
+                              }
+                              className="p-1.5 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded"
+                            >
                               <Trash2 className="w-4 h-4" />
                             </button>
                           </div>
@@ -491,6 +779,30 @@ export function ProjectsDashboard() {
           )}
         </div>
       </main>
+
+      {/* Copy Project Modal */}
+      <CopyProjectModal
+        open={copyModalOpen}
+        onOpenChange={setCopyModalOpen}
+        onConfirm={handleCopyConfirm}
+        originalProjectTitle={projectToCopy?.title || ""}
+      />
+
+      {/* Archive Project Modal */}
+      <ArchiveProjectModal
+        isOpen={archiveModalOpen}
+        onClose={() => setArchiveModalOpen(false)}
+        onConfirm={handleArchiveConfirm}
+        projectTitle={projectToArchive?.title || ""}
+      />
+
+      {/* Trash Project Modal */}
+      <TrashProjectModal
+        open={trashModalOpen}
+        onOpenChange={setTrashModalOpen}
+        onConfirm={handleDeleteConfirm}
+        projectTitle={projectToDelete?.title || ""}
+      />
     </div>
   );
 }

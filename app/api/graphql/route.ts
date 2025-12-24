@@ -6,11 +6,16 @@ export async function POST(req: NextRequest) {
         const body = await req.json()
         const backendUrl = getBackendUrl()
 
-        // Forward the request to the actual backend
+        // Get cookies from the incoming request
+        const cookies = req.headers.get("cookie") || ""
+
+        // Forward the request to the actual backend with cookies
         const response = await fetch(`${backendUrl}/api/graphql`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                // Forward cookies to backend
+                "Cookie": cookies,
                 // Add API key if configured
                 ...(BACKEND_API_KEY && { "x-api-key": BACKEND_API_KEY }),
             },
@@ -19,8 +24,20 @@ export async function POST(req: NextRequest) {
 
         const data = await response.json()
 
-        // Return the backend response
-        return NextResponse.json(data, { status: response.status })
+        // Get Set-Cookie headers from backend response
+        const setCookieHeaders = response.headers.getSetCookie()
+
+        // Create response with backend data
+        const nextResponse = NextResponse.json(data, { status: response.status })
+
+        // Forward Set-Cookie headers to the client
+        if (setCookieHeaders && setCookieHeaders.length > 0) {
+            setCookieHeaders.forEach(cookie => {
+                nextResponse.headers.append("Set-Cookie", cookie)
+            })
+        }
+
+        return nextResponse
     } catch (error: any) {
         console.error("Backend proxy error:", error)
         return NextResponse.json(

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Plus } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,24 +12,27 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from "@/components/ui/dialog";
 
 interface CreateProjectModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onCreateProject: (projectName: string) => Promise<void>;
+  isAuthenticated?: boolean;
 }
 
 export function CreateProjectModal({
   open,
   onOpenChange,
   onCreateProject,
+  isAuthenticated = true,
 }: CreateProjectModalProps) {
   const [projectName, setProjectName] = useState("");
   const [isCreating, setIsCreating] = useState(false);
 
   const handleCreate = async () => {
-    if (!projectName.trim()) return;
+    if (!projectName.trim() || !isAuthenticated) return;
 
     setIsCreating(true);
     try {
@@ -43,7 +47,7 @@ export function CreateProjectModal({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && projectName.trim()) {
+    if (e.key === "Enter" && projectName.trim() && isAuthenticated) {
       handleCreate();
     }
   };
@@ -53,6 +57,19 @@ export function CreateProjectModal({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>New Project</DialogTitle>
+          {!isAuthenticated && (
+            <DialogDescription className="text-red-600">
+              You must be logged in to create a project. Please{" "}
+              <Link href="/login" className="underline font-medium">
+                login
+              </Link>{" "}
+              or{" "}
+              <Link href="/signup" className="underline font-medium">
+                sign up
+              </Link>
+              .
+            </DialogDescription>
+          )}
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
@@ -64,7 +81,7 @@ export function CreateProjectModal({
               onChange={(e) => setProjectName(e.target.value)}
               onKeyDown={handleKeyDown}
               autoFocus
-              disabled={isCreating}
+              disabled={isCreating || !isAuthenticated}
             />
           </div>
         </div>
@@ -78,7 +95,7 @@ export function CreateProjectModal({
           </Button>
           <Button
             onClick={handleCreate}
-            disabled={!projectName.trim() || isCreating}
+            disabled={!projectName.trim() || isCreating || !isAuthenticated}
           >
             {isCreating ? "Creating..." : "Create"}
           </Button>
@@ -92,11 +109,13 @@ export function CreateProjectModal({
 interface CreateProjectButtonProps {
   onCreateProject: (projectName: string) => Promise<void>;
   variant?: "sidebar" | "main";
+  isAuthenticated?: boolean;
 }
 
 export function CreateProjectButton({
   onCreateProject,
   variant = "sidebar",
+  isAuthenticated = true,
 }: CreateProjectButtonProps) {
   const [open, setOpen] = useState(false);
 
@@ -114,6 +133,7 @@ export function CreateProjectButton({
           open={open}
           onOpenChange={setOpen}
           onCreateProject={onCreateProject}
+          isAuthenticated={isAuthenticated}
         />
       </>
     );
@@ -132,6 +152,7 @@ export function CreateProjectButton({
         open={open}
         onOpenChange={setOpen}
         onCreateProject={onCreateProject}
+        isAuthenticated={isAuthenticated}
       />
     </>
   );
