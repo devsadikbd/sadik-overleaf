@@ -9,6 +9,8 @@ import { CreateProjectButton } from "@/components/create-project-modal";
 import { TrashProjectModal } from "@/components/trash-project-modal";
 import { CopyProjectModal } from "@/components/copy-project-modal";
 import { ArchiveProjectModal } from "@/components/archive-project-modal";
+import { ShareProjectModal } from "@/components/share-project-modal";
+import { DownloadProjectModal } from "@/components/download-project-modal";
 import {
   Plus,
   FolderOpen,
@@ -81,6 +83,12 @@ export function ProjectsDashboard() {
   } | null>(null);
   const [archiveModalOpen, setArchiveModalOpen] = useState(false);
   const [projectToArchive, setProjectToArchive] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [downloadModalOpen, setDownloadModalOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<{
     id: string;
     title: string;
   } | null>(null);
@@ -421,7 +429,7 @@ export function ProjectsDashboard() {
           </Link>
 
           <Link
-            href="/projects/orders"
+            href="/print-order"
             className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#3d3254] hover:text-white transition-colors"
           >
             <ShoppingCart className="w-5 h-5" />
@@ -733,10 +741,28 @@ export function ProjectsDashboard() {
                         </td>
                         <td className="py-3 px-4">
                           <div className="flex items-center justify-end gap-2">
-                            <button className="p-1.5 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded">
+                            <button
+                              onClick={() => {
+                                setSelectedProject({
+                                  id: project.id,
+                                  title: project.title,
+                                });
+                                setShareModalOpen(true);
+                              }}
+                              className="p-1.5 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded"
+                            >
                               <Share2 className="w-4 h-4" />
                             </button>
-                            <button className="p-1.5 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded">
+                            <button
+                              onClick={() => {
+                                setSelectedProject({
+                                  id: project.id,
+                                  title: project.title,
+                                });
+                                setDownloadModalOpen(true);
+                              }}
+                              className="p-1.5 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded"
+                            >
                               <Download className="w-4 h-4" />
                             </button>
                             <button
@@ -802,6 +828,22 @@ export function ProjectsDashboard() {
         onOpenChange={setTrashModalOpen}
         onConfirm={handleDeleteConfirm}
         projectTitle={projectToDelete?.title || ""}
+      />
+
+      {/* Share Project Modal */}
+      <ShareProjectModal
+        isOpen={shareModalOpen}
+        onClose={() => setShareModalOpen(false)}
+        projectTitle={selectedProject?.title || ""}
+        projectId={selectedProject?.id || ""}
+      />
+
+      {/* Download Project Modal */}
+      <DownloadProjectModal
+        isOpen={downloadModalOpen}
+        onClose={() => setDownloadModalOpen(false)}
+        projectTitle={selectedProject?.title || ""}
+        projectId={selectedProject?.id || ""}
       />
     </div>
   );
