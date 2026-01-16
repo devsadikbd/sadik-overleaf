@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Menu,
@@ -61,6 +62,7 @@ interface Section {
 }
 
 export function EditorLayout({ projectId }: EditorLayoutProps) {
+  const router = useRouter();
   const [projectTitle, setProjectTitle] = useState("Loading...");
   const [leftPanelWidth, setLeftPanelWidth] = useState(200);
   const [middlePanelWidth, setMiddlePanelWidth] = useState(50); // percentage
@@ -311,104 +313,9 @@ export function EditorLayout({ projectId }: EditorLayoutProps) {
     setIsCompiling(false);
   };
 
-  // Handle print - only prints the PDF preview
+  // Handle print - navigate to My Orders page
   const handlePrint = () => {
-    const printContent = document.getElementById("pdf-preview");
-    if (!printContent) return;
-
-    const printWindow = window.open("", "_blank");
-    if (!printWindow) return;
-
-    // Extract title, author, date from code
-    const title = code.match(/\\title\{([^}]+)\}/)?.[1] || projectTitle;
-    const author = code.match(/\\author\{([^}]+)\}/)?.[1] || "Author";
-    const date =
-      code.match(/\\date\{([^}]+)\}/)?.[1] ||
-      new Date().toLocaleDateString("en-US", {
-        month: "long",
-        year: "numeric",
-      });
-
-    printWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>${title}</title>
-          <style>
-            @page {
-              margin: 1in;
-              size: A4;
-            }
-            body {
-              font-family: 'Times New Roman', Times, serif;
-              line-height: 1.6;
-              color: #000;
-              max-width: 800px;
-              margin: 0 auto;
-              padding: 40px;
-            }
-            .title {
-              text-align: center;
-              margin-bottom: 10px;
-            }
-            .title h1 {
-              font-size: 24px;
-              font-weight: bold;
-              margin: 0;
-            }
-            .author {
-              text-align: center;
-              font-size: 14px;
-              margin-bottom: 5px;
-            }
-            .date {
-              text-align: center;
-              font-size: 14px;
-              color: #666;
-              margin-bottom: 40px;
-            }
-            .section {
-              margin-top: 30px;
-            }
-            .section h2 {
-              font-size: 18px;
-              font-weight: bold;
-              margin-bottom: 10px;
-            }
-            @media print {
-              body {
-                padding: 0;
-              }
-            }
-          </style>
-        </head>
-        <body>
-          <div class="title">
-            <h1>${title}</h1>
-          </div>
-          <div class="author">${author}</div>
-          <div class="date">${date}</div>
-          ${sections
-            .map(
-              (section, index) => `
-            <div class="section">
-              <h2>${index + 1} ${section.title}</h2>
-            </div>
-          `
-            )
-            .join("")}
-        </body>
-      </html>
-    `);
-
-    printWindow.document.close();
-    printWindow.focus();
-
-    // Wait for content to load then print
-    setTimeout(() => {
-      printWindow.print();
-      printWindow.close();
-    }, 250);
+    router.push("/print-order");
   };
 
   // Handle file upload
@@ -653,7 +560,6 @@ export function EditorLayout({ projectId }: EditorLayoutProps) {
                 <>🔄 Recompile</>
               )}
             </Button>
-            
           </div>
         </div>
 

@@ -282,16 +282,6 @@ export function DownloadProjectModal({
               <Download className="w-4 h-4 text-gray-400" />
             </button>
           </div>
-
-          {/* Backend Service Note */}
-          <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
-            <div className="flex items-start gap-2">
-              <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
-              <p className="text-xs text-amber-700">
-                PDF compilation requires a LaTeX backend service. The service will compile your .tex file into a downloadable PDF.
-              </p>
-            </div>
-          </div>
         </div>
 
         <DialogFooter>
